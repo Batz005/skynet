@@ -1,0 +1,74 @@
+{
+    "resources": ["Artificial Intelligence", "Robotics", "Drawing", "Internet of Things", "Japanese", "Web and Internet Technologies", "Cryptography", "CyberSecurity", "Graph Theory" ],
+    "Artificial Intelligence":{
+            "name": "Artificial Intelligence",
+            "description": "",
+            "lectures":["4pSzhZ76GdM","APb_DGj0PFI","DGQA4gxjLr8","kUFWalEf31w","wEIKFxHzzac","ljApzn9YWmk","MepGo2xmVJw"],
+            "downloads": [],
+            "references": [
+                "https://www.investopedia.com/terms/a/artificial-intelligence-ai.asp#:~:text=Artificial%20intelligence%20(AI)%20refers%20to,as%20learning%20and%20problem%2Dsolving.",
+                "https://en.wikipedia.org/wiki/Artificial_intelligence",
+                "https://futureoflife.org/background/benefits-risks-of-artificial-intelligence/",
+                "https://www.britannica.com/technology/artificial-intelligence",
+                "https://www.zdnet.com/article/what-is-ai-everything-you-need-to-know-about-artificial-intelligence/"
+            ]
+    },
+    "Robotics": {
+        "name": "Robotics",
+        "description": "",
+        "lectures":[],
+        "downloads": [],
+        "references": []
+    }, 
+    "Drawing":{
+        "name": "Robotics",
+        "description": "",
+        "lectures":[],
+        "downloads": [],
+        "references": []
+    },   
+    "Internet of Things":{
+        "name": "Internet of Things",
+        "description": "",
+        "lectures":[],
+        "downloads": [],
+        "references": []
+    }, 
+    "Japanese":{
+        "name": "Japanese",
+        "description": "",
+        "lectures":[],
+        "downloads": [],
+        "references": []
+    }, 
+    "Web and Internet Technologies":{
+        "name": "Web and Internet Technologies",
+        "description": "",
+        "lectures":[],
+        "downloads": [],
+        "references": []
+    }, 
+    "Cryptography":{
+        "name": "Cryptography",
+        "description": "",
+        "lectures":[],
+        "downloads": [],
+        "references": []
+    }, 
+    "CyberSecurity":{
+        "name": "CyberSecurity",
+        "description": "",
+        "lectures":[],
+        "downloads": [],
+        "references": []
+    },   
+    "Graph Theory":{
+        "name": "Graph Theory",
+        "description": "",
+        "lectures":[],
+        "downloads": [],
+        "references": []
+    }
+
+    
+}

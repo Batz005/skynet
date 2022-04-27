@@ -1,0 +1,37 @@
+.resource__section__item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 3rem 1rem;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0px 3px 7px -2px rgba(0,0,0,0.75);
+    width: 90%;
+}
+
+hr.style__one {
+
+    border: 0;
+    width: 33%;
+    height: 1px;
+    background: #333;
+    background-image: -webkit-linear-gradient(left, #ccc, #333, #ccc);
+    background-image: -moz-linear-gradient(left, #ccc, #333, #ccc);
+    background-image: -ms-linear-gradient(left, #ccc, #333, #ccc);
+    background-image: -o-linear-gradient(left, #ccc, #333, #ccc);
+    margin-bottom: 20px;
+}
+
+
+
+.resource__section__downloads,
+.resource__section__references {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    justify-content: center;
+    align-items: center;
+    
+}

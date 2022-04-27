@@ -1,0 +1,14 @@
+{
+    "HOME__ACTIVE": [
+        "Feed","Profile", "Groups", "Faculty", "CBITinfo"],
+    "FRIENDS__ACTIVE": ["Friends", "Members", "Groups", "Interests"],
+    "CLUBS__ACTIVE": ["Clubs"],
+    "CLUB__INFO__ACTIVE": ["Introduction", "Achievements", "Hall of Fame", "Gallery","Join"],
+    "EVENTS__ACTIVE":  ["Calender", "Events"],
+    "ACTIVITIES__ACTIVE": ["Activities","Accomplishments"],
+    "RESOURCES__ACTIVE": ["Resources", "Favourites"],
+    "RESOURCE__SECTION__ACTIVE": ["Lectures", "Downloads", "References"],
+    "MYACCOUNT__ACTIVE": ["MyAccount", "Settings"],
+    "HELP__ACTIVE": ["FAQs","Feedback"]
+}
+

@@ -1,0 +1,39 @@
+.sidebar__row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end !important;
+    padding: 0.5rem;
+    margin-bottom: 0.8rem;
+    cursor: pointer;
+    width: 95%;
+    
+    
+    
+}
+
+.sidebar__row:hover {
+    background-color: lightgray;
+    transform: scale(1.05);
+    width: 95%; 
+}
+
+.sidebar__row > h4 {
+    
+    margin-left: 10px;
+    font-weight:600;
+}
+
+.sidebar__row--active {
+    background-color: #38f495;
+    box-shadow: 0px 3px 7px -2px rgba(0,0,0,0.75);
+    width: 95%;
+}
+
+.sidebar__row--active:hover {
+    background-color: #38f495;
+    box-shadow: 0px 3px 7px -2px rgba(0,0,0,0.75);
+    transform: scale(1.05);
+    width: 95%;
+}
+
+

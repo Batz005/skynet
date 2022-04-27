@@ -1,0 +1,15 @@
+
+
+.image-gallery-image {
+    align-items: stretch;
+    max-width: 80%;
+}
+
+.image-gallery-content {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    position: relative;
+    max-width: 100%;
+
+}

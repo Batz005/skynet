@@ -1,0 +1,148 @@
+
+
+.header {
+    padding: 0.75rem 0rem;
+    display: flex;
+    justify-content: space-between;
+    position: fixed;
+    background-color: #011627;
+    z-index: 999;
+    top: 0;
+    width: 100%;
+    box-shadow: 0px 3px 7px -2px rgba(0,0,0,0.75);
+}
+
+/*HEADER_LEFT*/
+
+.header__left {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+
+.header__input {
+    display: flex;
+    align-items: center;
+    background-color: #eff2f5;
+    padding: 10px;
+    margin-left:10px;
+    border-radius:33px;
+}
+
+.header__input > input {
+    border: none;
+    background-color: transparent;
+    outline-width: 0;
+}
+.Logo{
+    height: 40px;
+}
+
+/*HEADER_CENTER*/
+
+.header__center {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    right: center;
+}
+
+.header__option > .MuiSvgIcon-root{
+     
+    fill: whitesmoke; 
+}
+
+.header__option:hover > .MuiSvgIcon-root {
+    fill: #38F495;
+}
+
+.header__option {
+    display: flex;
+    align-items: center;
+    padding: 0 30px;
+    cursor: pointer;
+}
+
+.header__option:hover {
+    background-color: #262B3B;
+    border-radius: 10px;
+    align-items: center;
+    padding: 2px 30px;
+    
+}
+
+.header__option--active{
+    border-bottom: 4px solid #38F495;
+}
+
+.header__option--active > .MuiSvgIcon-root {
+    fill: #38F495;
+}
+
+/*HEADER_RIGHT*/
+
+.header__info {
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    cursor: pointer;
+}
+
+.header__info:hover {
+    background-color: #262B3B;
+    border-radius: 10px;
+    align-items: center;
+    padding: 0 15px;
+    border-bottom: none;
+}
+
+.header__info > h4 {
+    margin-left:10px; 
+    color: whitesmoke;
+}
+
+
+.header__right {
+    display: flex;
+}
+
+.header__buttons > .MuiIconButton-root ,
+.moremenu > .MuiIconButton-root  {
+    color: whitesmoke;
+    padding: 2px 5px;
+    
+}
+.header__buttons > .MuiIconButton-root:hover,
+.moremenu > .MuiIconButton-root:hover {
+    
+    border-radius: 999px;
+    background-color: #262B3B;
+    color: #38F495 !important;
+    padding: 2px 5px;
+    margin: none;
+    border: none;
+    border-bottom: none;
+}
+
+.header__buttons {
+    display: flex;
+    align-items: center;
+}
+
+.header__buttons > .MuiIconButton-root,
+.moremenu > .MuiIconButton-root {
+    padding: 5px !important;
+}
+
+
+
+@media (min-width: 1333px) {
+    .header__option > .MuiIconButton-root {
+        font-size: medium;
+    }
+
+}
+
+

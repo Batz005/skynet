@@ -1,0 +1,44 @@
+.app {
+    background-color: #f1f2f5;
+    
+}
+
+
+.app__body {
+    margin-top: 4rem;
+    position: relative;
+    background-color: #f1f2f5;
+    display: flex;
+    flex-direction: row;
+
+    justify-content: space-evenly;
+}
+
+.app__body > .sidebar {
+    display: flex;
+    flex: 1.5;
+    position: fixed;
+    top: 5rem;
+    left: 1rem;
+    margin-left: 0rem !important;
+    min-width: 13rem !important;
+    
+}
+
+.app__body > .middlesection {
+    display: flex;
+    flex: 4;
+    margin-left: 18rem !important;
+}
+
+.app__body > .rightsection {
+    display: flex;
+    flex: 1.5;
+
+}
+.app__body > .MuiFab-root {
+    position: fixed;
+    bottom: 2em;
+    right: 2em;
+    z-index: 90;
+}
