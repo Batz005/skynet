@@ -1,7 +1,7 @@
 
 
 .header {
-    padding: 0.75rem 0rem;
+    padding: 0.50rem 0rem;
     display: flex;
     justify-content: space-between;
     position: fixed;
@@ -47,6 +47,7 @@
     justify-content: center;
     align-items: center;
     right: center;
+    height:max-content;
 }
 
 .header__option > .MuiSvgIcon-root{

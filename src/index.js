@@ -4,12 +4,20 @@ import { Provider } from 'react-redux';
 import store from './store';
 import './index.css';
 import App from './app/App';
+import { NhostApolloProvider } from '@nhost/react-apollo';
+import { NhostReactProvider } from '@nhost/react';
 import reportWebVitals from './reportWebVitals';
+import nhost from './lib/nhost'
+
 
 ReactDOM.render(
-  <Provider store = {store}>
-    <App />
-  </Provider>,
+  <NhostReactProvider nhost={nhost}>
+      <NhostApolloProvider nhost={nhost}>
+        <Provider store = {store}>
+          <App />
+        </Provider>
+      </NhostApolloProvider>
+  </NhostReactProvider>,
   document.getElementById('root')
 );
 

@@ -6,6 +6,7 @@ import { Container } from '@mui/material'
 import "./SideBar.css";
 import { pageSelected,subPageSelected } from '../../app/site';
 import SideBarRow from './SideBarRow';
+import MenuIcon from '@mui/icons-material/Menu';
 
 function SideBar() {
     
@@ -15,7 +16,7 @@ function SideBar() {
     console.log(sidebar__items,active__page);
     return (
         <Container className = "sidebar" style= {{ maxWidth: "15%"}}>
-            
+                <MenuIcon />
                 {sidebar__items.map((item,i) => {
                     // if (active__page ==="HOME__ACTIVE" && item === "Profile"){
                     //     return <Link 

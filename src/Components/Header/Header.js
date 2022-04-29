@@ -38,10 +38,11 @@ function Header() {
     console.log(username);
     const active__page = useSelector((state) => state.site.active__page);
     console.log(active__page);
-        
+    
     const dispatch = useDispatch();
     return (
         <div className = "header">
+            
             <div className = "header__left">
                 <Link to = "/home" onClick = {()=>{
                                 dispatch(pageSelected({active__page: 'HOME__ACTIVE'}));

@@ -55,3 +55,7 @@
     color: blue;
     border-color: black;
 }
+
+#SignInEmail {
+    size: 0px;
+}

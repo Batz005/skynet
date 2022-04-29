@@ -7,7 +7,7 @@ background: -moz-linear-gradient(90deg, hsla(339, 100%, 55%, 1) 0%, hsla(197, 10
 
 background: -webkit-linear-gradient(90deg, hsla(339, 100%, 55%, 1) 0%, hsla(197, 100%, 64%, 1) 100%);
 
-background-image: "../../Untitled-2.png" !important;
+background-image: "../../Untitled-2.png";
 background-size: cover;
 background-repeat: no-repeat;
 background-position: center;
@@ -19,6 +19,6 @@ background-position: center;
 	right: 0;
 	bottom: 0;
 	left: 0;
-	z-index: -2;
+	z-index: 1;
 }
 

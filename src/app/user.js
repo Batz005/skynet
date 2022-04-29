@@ -1,27 +1,29 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-    uid: '',
-    username: 'bharath',
+    user_id: '',
+    username: '',
     email: '',
-    personalEmail: '',
+    defaultRole: '',
     section: '',
     branch: '',
-    semester: '',
+    semester: 0,
     first_name: '',
     last_name: '',
     date_of_birth: '',
     father_name: '',
     mobile: '',
-    mentor: '',
-    profile_pic: '',
-    friends: '',
-    groups_joined: '',
-    clubs_joined: [],
-    activities_applied: [],
-    activities_completed: [],
-    resource_favourites: [],
-    calender_details: []
+    mentor_name: '',
+    mentor_email: '',
+    roll_num: 0
+    // profile_pic: '',
+    // friends: '',
+    // groups_joined: '',
+    // clubs_joined: [],
+    // activities_applied: [],
+    // activities_completed: [],
+    // resource_favourites: [],
+    // calender_details: []
 };
 
 const userSlice = createSlice({

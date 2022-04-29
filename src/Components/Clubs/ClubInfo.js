@@ -327,7 +327,7 @@ function ClubInfo() {
               </Paper>
           </Container>
 
-          <Container maxWidth = "md" className = "clubinfo__latest__events" disableGutters = {true}>
+          {/* <Container maxWidth = "md" className = "clubinfo__latest__events" disableGutters = {true}>
             <Grid container spacing={4}>
               {
                 latestEvents.map((event,i)=>{
@@ -358,7 +358,7 @@ function ClubInfo() {
                 })
               }
             </Grid>      
-          </Container>
+          </Container> */}
 
           <Container maxWidth = "md" className = "clubinfo__item">
               <Typography component="h2" variant="h3" align="center" color="textPrimary" gutterBottom>

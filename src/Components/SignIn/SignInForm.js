@@ -1,11 +1,15 @@
 import { Button, TextField, Snackbar, Alert as MuiAlert } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import React,{ useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate, useLocation} from 'react-router-dom'
 import { useSelector, useDispatch} from 'react-redux'
 import axios from 'axios'
 import { signInStatus,pageSelected, subPageSelected } from '../../app/site'
 import { addUserData } from '../../app/user'
+import nhost from '../../lib/nhost'
+import { useAuthenticationStatus, useUserRoles, useAccessToken, useUserId,  } from '@nhost/react'
+import { useAuthQuery } from '@nhost/react-apollo';
+import { gql,useQuery } from '@apollo/client'
 
 
 import "./SignInForm.css"
@@ -14,13 +18,20 @@ function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
 
+ 
 function SignInForm() {
 
     const dispatch = useDispatch();
     const [ email, setEmail ] = useState('');
     const [ password, setPassword ] = useState('');
-
-
+    const [ isSignedIn, setIsSignedIn ] = useState(false);
+    const domain = "@cbit.org.in"
+    const navigate = useNavigate();
+    let location = useLocation();
+    
+  
+    let from = location.state?.from?.pathname || "/home";
+  
     const [open, setOpen] = React.useState(false);
   
     const handleClick = () => {
@@ -35,10 +46,9 @@ function SignInForm() {
       setOpen(false);
     };
 
-
     const onEmailChange = (e)=>{
-        setEmail(e.target.value);
-        console.log(e.target.value);
+        setEmail(e.target.value + domain);
+        console.log(email);
     }
 
     const onPasswordChange = (e) => {
@@ -46,34 +56,103 @@ function SignInForm() {
         console.log(e.target.value);
     }
 
-    const handleSignIn = (e) =>{
+    const { isLoading, isAuthenticated } = useAuthenticationStatus()
+    
+    const handleSignIn = async (e) =>{
         e.preventDefault();
-        axios.post('/api/signin',{
-            email: email,
-            password: password
-        })
-        .then((response)=>{
-            if( response.data[0].uid){
-                dispatch(signInStatus({isSignedIn: true}));
-                dispatch(addUserData(response.data[0]));
-                dispatch(pageSelected({active__page: 'HOME__ACTIVE'}));
-                dispatch(subPageSelected({active__subPage: 'FEED__SUBPAGE__ACTIVE'}));
-            }
-            else
-                handleClick();
-        })
-        .catch((err)=>{
-            console.log(err);
-        })
+
+        try {
+            await nhost.auth.signIn({email: email, password: password})
+        }catch(error) {
+            handleClick()
+        }
+        
+
+        const data = await nhost.graphql.request(`
+        `)
+
+        // if (isAuthenticated){
+        
+        //     console.log(data, "hello")
+        //     dispatch(signInStatus({isSignedIn: true}));
+        //     dispatch(pageSelected({active__page: 'HOME__ACTIVE'}));
+        //     dispatch(subPageSelected({active__subPage: 'FEED__SUBPAGE__ACTIVE'}));
+        //     navigate(from, { replace: true })
+        // }
+
+        // axios.post('/api/signin',{
+        //     email: email,
+        //     password: password
+        // })
+        // .then((response)=>{
+        //     if( response.data[0].uid){
+        //         dispatch(signInStatus({isSignedIn: true}));
+        //         dispatch(addUserData(response.data[0]));
+        //         dispatch(pageSelected({active__page: 'HOME__ACTIVE'}));
+        //         dispatch(subPageSelected({active__subPage: 'FEED__SUBPAGE__ACTIVE'}));
+        //     }
+        //     else
+        //         handleClick();
+        // })
+        // .catch((err)=>{
+        //     console.log(err);
+        // })
     }
-
-
-
+    
+    
+    
+    let user = {}
+    
+    if (isAuthenticated){
+        
+        
+            user = nhost.auth.getUser("x-hasura-user-id")
+            dispatch(signInStatus({isSignedIn: true}));
+            dispatch(pageSelected({active__page: 'HOME__ACTIVE'}));
+            dispatch(subPageSelected({active__subPage: 'FEED__SUBPAGE__ACTIVE'}));
+            navigate(from, { replace: true })
+            
+    }
+    console.log(user)
+    const GET_USER_DETAILS = gql`
+    query GetDetails($user_id: uuid!) {
+        user(id: $user_id) {
+          email
+          defaultRole
+          user_detail {
+            branch
+            date_of_birth
+            details_id
+            father_name
+            first_name
+            last_name
+            mentor_email
+            mentor_name
+            mobile
+            roll_num
+            section
+            semester
+            user_id
+          }
+        }
+      }
+ `; 
+    const token = useAccessToken("x-hasura-User-id")
+    const { loading, data, error } = useAuthQuery(GET_USER_DETAILS,{
+        variables: {
+            user_id: token
+        }
+    });
+    console.log(data, error, loading)
+    
     return (
         <>
             <form className = "signin__form">
-                    <h1 style= {{ fontFamily: "serif"}}>Sign In</h1>
-                    <TextField id = "SignInEmail" onChange = {onEmailChange} size = "small" color = "primary" label = 'Roll No.' variant = "outlined" />
+                    <h1 style= {{ fontFamily: "serif", marginBottom: "1em"}}>Sign In</h1>
+                    <span style = {{display: "flex", flexDirection: "row", marginleft: "0.90em", marginRight: "0.75em", alignItems: "center"}}>
+                    <TextField id = "SignInEmail" style = {{marginLeft: "0.85em"}} onChange = {onEmailChange} size = "small" color = "primary" label = 'Email' variant = "outlined" />
+                    @cbit.org.in
+                    </span>
                     <TextField
                         id="outlined-password-input"
                         label="Password"
@@ -83,9 +162,9 @@ function SignInForm() {
                         size = "small"
                         onChange = {onPasswordChange}
                     />
-                    <Link className = "signin__button__link" to = "/signedInHome" style = {{ textDecoration: "none", color:"whitesmoke"}}>
+                    <div className = "signin__button__link" style = {{ textDecoration: "none", color:"whitesmoke"}}>
                         <Button onClick = {handleSignIn} type = "submit" variant = "contained" ><strong>Sign In</strong></Button> 
-                    </Link>
+                    </div>
                     <h5 style = {{ textDecoration: "underline", cursor: "pointer"}}>Forgot Password?</h5>
             </form>
             <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>

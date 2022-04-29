@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { pageSelected, signInStatus, subPageSelected } from '../../app/site';
 
+
 import {
   styled,
   IconButton,
@@ -14,27 +15,28 @@ import {
   MenuItem,
   MenuList,
 } from '@mui/material';
+import nhost from '../../lib/nhost';
 
-const PREFIX = 'MoreMenu';
+// const PREFIX = 'MoreMenu';
 
-const classes = {
-  root: `${PREFIX}-root`,
-  paper: `${PREFIX}-paper`
-};
+// const classes = {
+//   root: `${PREFIX}-root`,
+//   paper: `${PREFIX}-paper`
+// };
 
-const Root = styled('div')((
-  {
-    theme
-  }
-) => ({
-  [`& .${classes.root}`]: {
-    display: 'flex',
-  },
+// const Root = styled('div')((
+//   {
+//     theme
+//   }
+// ) => ({
+//   [`& .${classes.root}`]: {
+//     display: 'flex',
+//   },
 
-  [`& .${classes.paper}`]: {
-    marginRight: theme.spacing(2),
-  }
-}));
+//   [`& .${classes.paper}`]: {
+//     marginRight: theme.spacing(2),
+//   }
+// }));
 
 
 export default function MoreMenu() {
@@ -57,6 +59,8 @@ export default function MoreMenu() {
   function handleListKeyDown(event) {
     if (event.key === 'Tab') {
       event.preventDefault();
+      setOpen(false);
+    } else if (event.key === 'Escape') {
       setOpen(false);
     }
   }
@@ -82,19 +86,28 @@ export default function MoreMenu() {
     dispatch(pageSelected({active__page: 'MYACCOUNT__ACTIVE'}));
     dispatch(subPageSelected({active__subPage: 'PROFILE__SUBPAGE__ACTIVE'}));
   }
-
-  const handleLogOutClicked = (e)=>{
+  
+  const handleLogOutClicked =  (e)=>{
     handleClose(e);
-    dispatch(pageSelected({active__page: 'HOME__ACTIVE'}));
-    dispatch(subPageSelected({active__subPage: 'FEED__SUBPAGE__ACTIVE'}));
+    
+    
+    
+    try {
+      nhost.auth.signOut()
+    }catch(error){
+      console.log("Sign Out Unsuccessful - ")
+      console.error(error)
+    }
     dispatch(signInStatus({isSignedIn: false}))
   }
 
   return (
-    <Root className = "moremenu">
+    <div className = "moremenu">
       <IconButton
         ref={anchorRef}
-        aria-controls={open ? 'menu-list-grow' : undefined}
+        id="composition-button"
+        aria-controls={open ? 'composition-menu' : undefined}
+        aria-expanded={open ? 'true' : undefined}
         aria-haspopup="true"
         onClick={handleToggle}
         size="large">
@@ -108,7 +121,7 @@ export default function MoreMenu() {
             >
               <Paper>
                 <ClickAwayListener onClickAway={handleClose}>
-                  <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
+                  <MenuList autoFocusItem={open} id="composition-menu" aria-labelledby="composition-button" onKeyDown={handleListKeyDown}>
                     <Link to = "/myaccount/username" style = {{textDecoration: 'none', color: 'black'}}>
                       <MenuItem onClick={handleOnMyAccountClicked}>My account</MenuItem>
                     </Link>
@@ -124,7 +137,7 @@ export default function MoreMenu() {
             </Grow>
           )}
         </Popper>
-    </Root>
+    </div>
   );
 }
 

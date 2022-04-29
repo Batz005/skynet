@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Feed from '../../Components/Feed/Feed';
 import Resources from '../../Components/Resources/Resources';
 import ResourceSection from '../../Components/Resources/ResourceSection';
@@ -12,12 +12,15 @@ import Clubs from '../../Components/Clubs/Clubs'
 import MyAccount from '../../Components/MyAccount/MyAccount'
 import Friends from '../../Components/Friends/Friends'
 import { Container } from '@mui/material'
+import nhost from '../../lib/nhost'
 
 import "./MiddleSection.css";
 import SignIn from '../../Components/SignIn/SignIn';
 
 function MiddleSection() {
-    const isSignedIn = useSelector(state => state.site.isSignedIn);
+    // const isSignedIn = useSelector(state => state.site.isSignedIn);
+    const {isSignedIn } = nhost.auth
+
     // const pageFinder = (active__page) =>{
     //     switch(active__page){
     //         case 'HOME__ACTIVE':
@@ -54,32 +57,33 @@ function MiddleSection() {
     
     return (
         <Container className = "middlesection" style ={{ marginLeft: "2rem", maxWidth: "90%"}} disableGutters = {true}>
-            <Switch>
+            <Routes>
                 {
                     !isSignedIn &&
-                    <Route path = "/signin" exact component = {SignIn} />
+                    <Route path = "/signin" exact element = {<SignIn />} />
                 }
                 
-                <Route path ="/home" exact component = {Feed} />
+                <Route path ="/home" exact element = {<Feed />} />
 
-                {
+                {/* {
                     isSignedIn &&
                     <Route path = "/signInHome" exact>
-                        <Redirect to = "/home" />
+                        <Route path="/signInHome" render={() => <Navigate to="/home" />} />
+
                     </Route>
-                }
+                } */}
                 
-                <Route path ="/friends" exact component = {Friends} />
-                <Route path = "/clubs" exact component = {Clubs} />
-                <Route path = "/clubs/clubinfo/:clubName" exact component = {ClubInfo} />
-                <Route path = "/events" exact component = {Events}/>
-                <Route path = "/activities" exact component = {Activities} />
+                <Route path ="/friends" exact element = {<Friends />} />
+                <Route path = "/clubs" exact element = {<Clubs />} />
+                <Route path = "/clubs/clubinfo/:clubName" exact element = {<ClubInfo />} />
+                <Route path = "/events" exact element = {<Events />}/>
+                <Route path = "/activities" exact element = {<Activities />} />
             
-                <Route path = "/resources" exact component = {Resources} />
-                <Route path = "/resources/:resourceName" exact component = {ResourceSection} />    
-                <Route path = "/myaccount/:userId" exact component = {MyAccount} />
-                <Route path = "/help" exact component = {Help} />   
-            </Switch>
+                <Route path = "/resources" exact element = {<Resources />} />
+                <Route path = "/resources/:resourceName" exact element = {<ResourceSection />} />    
+                <Route path = "/myaccount/:userId" exact element = {<MyAccount />} />
+                <Route path = "/help" exact element = {<Help />} />   
+            </Routes>
         </Container>
     )
 }

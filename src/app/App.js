@@ -11,7 +11,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import MiddleSection from '../Containers/MiddleSection/MiddleSection';
 import RightSection from '../Containers/RightSection/RightSection';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
-
+// import LinearIndeterminate from '../utils/LinearIndertiminate';
 import {  Fab } from '@mui/material';
 
 const customTheme = createTheme(({
@@ -54,7 +54,7 @@ const App = () => {
   const isSignedIn= useSelector((state)=>state.site.isSignedIn);
   console.log(isSignedIn)
   
-   
+  // const isLoading = useSelector((state) => state.site.isLoading);
   
   
   
@@ -62,8 +62,9 @@ const App = () => {
     
       <ThemeProvider theme = {customTheme}>
         <div className="app">
+        {/* {isLoading && <LinearIndeterminate /> } */}
         <Router>
-          {(isSignedIn)
+          {(!isSignedIn)
           ?(<SignIn />)
           :(<>
               <Header />

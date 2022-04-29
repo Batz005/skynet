@@ -8,7 +8,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import CloseIcon from '@mui/icons-material/Close';
 import './MyAccount.css'
 import axios from 'axios';
-// import QRCode from "react-qr-code";
+import QRCode from "react-qr-code";
 import { addProfilePic } from '../../app/user'
 
 
@@ -57,7 +57,7 @@ function MyAccount() {
                     <div className = "myaccount__idsection__details">
                         <div style = {{ position: "relative"}}>
                             <img src = {picLink} alt = "profile pic" style = {{boxShadow: "0px 3px 7px -2px rgba(255,0,0,0.75)"}} width = "150px" height = "150px"/>
-                            <Fab style = {{position: "absolute", bottom: "10px", right: "10px"}} color = "secondary" onClick = {handlePicEditClicked}>
+                            <Fab style = {{position: "absolute", bottom: "1px", right: "2px", size: "10px"}} color = "secondary"  onClick = {handlePicEditClicked}>
                                 <EditIcon />     
                             </Fab>
                             {/* <DropzoneDialog
@@ -83,7 +83,7 @@ function MyAccount() {
                         </div>
                     </div>
 
-                    {/* <QRCode value= {`${roll_num}`} /> */}
+                    <QRCode value= {`${roll_num}`} />
                     
             </div>
             <div className = "myaccount__item">

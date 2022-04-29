@@ -25,6 +25,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
     isSignedIn: false,
+    isLoading: false,
     active__page: 'HOME__ACTIVE',
     active__subPage: 'FEED__SUBPAGE__ACTIVE'
 };
@@ -44,6 +45,10 @@ const siteSlice = createSlice ({
         signInStatus(state,action) {
             const { isSignedIn } = action.payload
             state.isSignedIn = isSignedIn;
+        },
+        loadingStatus(state, action){
+            const { isLoading } = action.payload
+            state.isLoading = isLoading;
         }
     }
 }
