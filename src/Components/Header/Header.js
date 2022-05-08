@@ -28,13 +28,13 @@ import InvertColorsOutlinedIcon from '@mui/icons-material/InvertColorsOutlined';
 import ForumIcon from "@mui/icons-material/Forum";
 import MoreMenu from './MoreMenu';
 import "./Header.css";
-
+import { deepOrange, deepPurple } from '@mui/material/colors';
 import { pageSelected,subPageSelected } from '../../app/site';
 
 
 function Header() {
     
-    const username = useSelector((state)=>state.user.username);
+    const username = useSelector((state)=>state.user.user_detail.first_name);
     console.log(username);
     const active__page = useSelector((state) => state.site.active__page);
     console.log(active__page);
@@ -179,7 +179,7 @@ function Header() {
                     }}
                 >
                     <div className = "header__info">
-                        <Avatar>
+                        <Avatar sx={{ bgcolor: deepOrange[500] }}>
                             {username[0]}
                         </Avatar>
                         <h4>{username}</h4>

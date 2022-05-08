@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import store from './store';
 import './index.css';
 import App from './app/App';
+import CssBaseline from '@mui/material/CssBaseline';
 import { NhostApolloProvider } from '@nhost/react-apollo';
 import { NhostReactProvider } from '@nhost/react';
 import reportWebVitals from './reportWebVitals';
@@ -14,6 +15,7 @@ ReactDOM.render(
   <NhostReactProvider nhost={nhost}>
       <NhostApolloProvider nhost={nhost}>
         <Provider store = {store}>
+          <CssBaseline />
           <App />
         </Provider>
       </NhostApolloProvider>

@@ -15,62 +15,14 @@ import {
   Grid,
   Typography,
   Container,
+  Box
 } from '@mui/material';
 import { Link as LinkRouter }from 'react-router-dom';
 
 import { pageSelected } from '../../app/site';
+import "./Resources.css"
 
-const PREFIX = 'Resources';
 
-const classes = {
-  heroContent: `${PREFIX}-heroContent`,
-  heroButtons: `${PREFIX}-heroButtons`,
-  cardGrid: `${PREFIX}-cardGrid`,
-  card: `${PREFIX}-card`,
-  cardMedia: `${PREFIX}-cardMedia`,
-  cardContent: `${PREFIX}-cardContent`
-};
-
-// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
-const Root = styled('div')((
-  {
-    theme
-  }
-) => ({
-  [`& .${classes.heroContent}`]: {
-    backgroundColor: theme.palette.background.paper,
-    borderRadius: '15px',
-    boxShadow: '3px 9px 21px -6px rgba(0,0,0,0.75)',
-    padding: theme.spacing(8, 0, 6),
-  },
-
-  [`& .${classes.heroButtons}`]: {
-    marginTop: theme.spacing(4),
-  },
-
-  [`& .${classes.cardGrid}`]: {
-    paddingTop: theme.spacing(8),
-    paddingBottom: theme.spacing(8),
-  },
-
-  [`& .${classes.card}`]: {
-    height: '100%',
-    display: 'flex',
-    cursor: 'pointer',
-    position: 'relative',
-    flexDirection: 'column',
-    paddingBottom: '20px',
-  },
-
-  [`& .${classes.cardMedia}`]: {
-    paddingTop: '56.25%', // 16:9
-  },
-
-  [`& .${classes.cardContent}`]: {
-    flexGrow: 1,
-    paddingBottom: '20px',
-  }
-}));
 
 function Copyright() {
   return (
@@ -94,13 +46,18 @@ export default function Resources() {
   const dispatch = useDispatch();
 
   return (
-    <Root>
-      <CssBaseline />
+     
       <main>
       <div id = "resources-resources">
          {/* Hero unit */}
-         <div className={classes.heroContent}>
-          <Container maxWidth="sm">
+         <Box sx={{
+            bgcolor: 'background.paper',
+            pt: 8,
+            pb: 6,
+            boxShadow: 10,
+            borderRadius: '15px',
+          }}>
+          <Container  maxWidth="sm">
             <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
               Resources
             </Typography>
@@ -109,24 +66,28 @@ export default function Resources() {
               Each topic has related lectures(videos), PDFs and other references. 
             </Typography>
           </Container>
-        </div>
-        <Container className={classes.cardGrid} maxWidth="md">
+        </Box>
+        <Container sx={{ py: 8 }} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
             {cards.map((card,i) => (
               <Grid item key={card} xs={12} sm={6} md={4}>
-                <Card className={classes.card} >
+                <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', boxShadow: 2 }} >
                     <LinkRouter 
                       to = {`/resources/${resources[0]}`} 
                       style = {{ textDecoration: 'none', color: 'black'}} 
                       onClick = {()=>dispatch(pageSelected({active__page: 'RESOURCE__SECTION__ACTIVE'}))}
                     >
                         <CardMedia
-                            className={classes.cardMedia}
+                            
+                            sx={{
+                              // 16:9
+                              pt: '56.25%',
+                            }}
                             image={`https://source.unsplash.com/random/?collegesubjects/${i}`}
                             title="Image title"
                         />
-                        <CardContent className={classes.cardContent}>
+                        <CardContent sx={{ flexGrow: 1 }}>
                             <Typography gutterBottom variant="h5" component="h2">
                             {resources[i]}
                             </Typography>
@@ -135,11 +96,7 @@ export default function Resources() {
                             </Typography>
                         </CardContent>
                     </LinkRouter>
-                    <CardActions style = {{ position: "absolute",bottom: "5px"}}>
-                        <IconButton size="small" color="primary">
-                            <StarBorderRoundedIcon />
-                        </IconButton>
-                    </CardActions>
+                    
                 </Card>
               </Grid>
             ))}
@@ -147,13 +104,13 @@ export default function Resources() {
         </Container>
       </div> 
 
-      <div id = "resources-favourites" >
+      
 
-      </div>
+      
       </main>
       
       
-    </Root>
+    
   );
 }
 

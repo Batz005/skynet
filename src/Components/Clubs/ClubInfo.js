@@ -524,7 +524,7 @@ function ClubInfo() {
                     <Typography variant="h5" color="inherit" paragraph align = "left" display = "inline" style = {{flex: 1}}>
                         Motivation:
                     </Typography>
-                    <TextField variant="outlined" label="Multiline Placeholder" placeholder="Placeholder" multiline style = {{ margin: "20px", flex: 3, width: "100%  "}} rows = "8" columns = "100"/>
+                    <TextField variant="outlined" label="Motivation" placeholder="Placeholder" multiline style = {{ margin: "20px", flex: 3, width: "100%  "}} rows = "8" columns = "100"/>
                 </div>
                 <div style = {{ display: "flex", alignItems: 'center', justifyContent: "center"}}>
                   <AlertDialog buttonName = "Apply" question = {question} description = {description} style = {{ position: "absolute", bottom: "20px", right: "20px"}}/>

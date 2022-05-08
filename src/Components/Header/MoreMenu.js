@@ -15,6 +15,7 @@ import {
   MenuItem,
   MenuList,
 } from '@mui/material';
+import { useSignOut } from '@nhost/react'
 import nhost from '../../lib/nhost';
 
 // const PREFIX = 'MoreMenu';
@@ -43,6 +44,7 @@ export default function MoreMenu() {
 
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
+  const {signOut, isSuccess} = useSignOut()
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -93,11 +95,12 @@ export default function MoreMenu() {
     
     
     try {
-      nhost.auth.signOut()
+      signOut()
     }catch(error){
       console.log("Sign Out Unsuccessful - ")
       console.error(error)
     }
+    
     dispatch(signInStatus({isSignedIn: false}))
   }
 

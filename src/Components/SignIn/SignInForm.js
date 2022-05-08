@@ -1,13 +1,13 @@
 import { Button, TextField, Snackbar, Alert as MuiAlert } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import React,{ useState } from 'react'
+import React,{ useEffect, useState } from 'react'
 import { Link, useNavigate, useLocation} from 'react-router-dom'
 import { useSelector, useDispatch} from 'react-redux'
 import axios from 'axios'
-import { signInStatus,pageSelected, subPageSelected } from '../../app/site'
+import { signInStatus,pageSelected, subPageSelected, loadingStatus } from '../../app/site'
 import { addUserData } from '../../app/user'
 import nhost from '../../lib/nhost'
-import { useAuthenticationStatus, useUserRoles, useAccessToken, useUserId,  } from '@nhost/react'
+import { useAuthenticated, useUserRoles,useSignInEmailPassword, useAccessToken, useUserId,   } from '@nhost/react'
 import { useAuthQuery } from '@nhost/react-apollo';
 import { gql,useQuery } from '@apollo/client'
 
@@ -28,8 +28,14 @@ function SignInForm() {
     const domain = "@cbit.org.in"
     const navigate = useNavigate();
     let location = useLocation();
-    
-  
+    const {
+        signInEmailPassword,
+        isLoading,
+        isSuccess,
+        isError
+      } = useSignInEmailPassword()
+          
+    const id = useUserId()
     let from = location.state?.from?.pathname || "/home";
   
     const [open, setOpen] = React.useState(false);
@@ -56,20 +62,20 @@ function SignInForm() {
         console.log(e.target.value);
     }
 
-    const { isLoading, isAuthenticated } = useAuthenticationStatus()
     
-    const handleSignIn = async (e) =>{
+    
+    const handleSignIn =  (e) =>{
         e.preventDefault();
 
         try {
-            await nhost.auth.signIn({email: email, password: password})
+            signInEmailPassword(email, password)
         }catch(error) {
+            console.log("error signing in")
             handleClick()
         }
         
 
-        const data = await nhost.graphql.request(`
-        `)
+        
 
         // if (isAuthenticated){
         
@@ -99,20 +105,11 @@ function SignInForm() {
         // })
     }
     
-    
+    const { isAuthenticated } = useAuthenticated()
     
     let user = {}
     
-    if (isAuthenticated){
-        
-        
-            user = nhost.auth.getUser("x-hasura-user-id")
-            dispatch(signInStatus({isSignedIn: true}));
-            dispatch(pageSelected({active__page: 'HOME__ACTIVE'}));
-            dispatch(subPageSelected({active__subPage: 'FEED__SUBPAGE__ACTIVE'}));
-            navigate(from, { replace: true })
-            
-    }
+    
     console.log(user)
     const GET_USER_DETAILS = gql`
     query GetDetails($user_id: uuid!) {
@@ -137,14 +134,36 @@ function SignInForm() {
         }
       }
  `; 
-    const token = useAccessToken("x-hasura-User-id")
+    // const token = useAccessToken("X-Hasura-User-id")
     const { loading, data, error } = useAuthQuery(GET_USER_DETAILS,{
         variables: {
-            user_id: token
-        }
+            user_id: id
+        },
     });
+    if(data){
+        
+        dispatch(addUserData(data["user"]))
+        
+            dispatch(pageSelected({active__page: 'HOME__ACTIVE'}));
+            dispatch(subPageSelected({active__subPage: 'FEED__SUBPAGE__ACTIVE'}));
+            dispatch(signInStatus({isSignedIn: true}));
+            navigate(from, { replace: true })
+    }
     console.log(data, error, loading)
     
+    // useEffect(()=>{
+    //     if (isAuthenticated){
+        
+        
+    //         user = nhost.auth.getUser()
+    //         dispatch(signInStatus({isSignedIn: true}));
+    //         dispatch(pageSelected({active__page: 'HOME__ACTIVE'}));
+    //         dispatch(subPageSelected({active__subPage: 'FEED__SUBPAGE__ACTIVE'}));
+    //         navigate(from, { replace: true })
+            
+    // }
+    // }, [isAuthenticated])
+
     return (
         <>
             <form className = "signin__form">
