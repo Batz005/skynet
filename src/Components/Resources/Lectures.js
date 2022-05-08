@@ -239,7 +239,7 @@ const YoutubeSlide = ({ url, isSelected }) => (
 
 const Lectures = ({ lectureLinks }) => {
 
-        const videoId = getVideoId("https://www.youtube.com/watch?v=WX1khF8zEr4")
+        // const videoId = getVideoId("https://www.youtube.com/watch?v=WX1khF8zEr4")
         console.log(lectureLinks)
         const customRenderItem = (item, props) => <item.type {...item.props} {...props} />;
 
