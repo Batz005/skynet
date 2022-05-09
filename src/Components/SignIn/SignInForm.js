@@ -10,7 +10,7 @@ import nhost from '../../lib/nhost'
 import { useAuthenticated, useUserRoles,useSignInEmailPassword, useAccessToken, useUserId,   } from '@nhost/react'
 import { useAuthQuery } from '@nhost/react-apollo';
 import { gql,useQuery } from '@apollo/client'
-
+import { GET_USER_DETAILS } from '../../apollo/hasura.js'
 
 import "./SignInForm.css"
 
@@ -111,29 +111,7 @@ function SignInForm() {
     
     
     console.log(user)
-    const GET_USER_DETAILS = gql`
-    query GetDetails($user_id: uuid!) {
-        user(id: $user_id) {
-          email
-          defaultRole
-          user_detail {
-            branch
-            date_of_birth
-            details_id
-            father_name
-            first_name
-            last_name
-            mentor_email
-            mentor_name
-            mobile
-            roll_num
-            section
-            semester
-            user_id
-          }
-        }
-      }
- `; 
+    
     // const token = useAccessToken("X-Hasura-User-id")
     const { loading, data, error } = useAuthQuery(GET_USER_DETAILS,{
         variables: {
