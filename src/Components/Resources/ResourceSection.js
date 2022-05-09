@@ -47,7 +47,7 @@ function ResourceSection() {
     const handleClose = () => setOpen(false);
 
     const fetchVideoData =  (videoId) => {
-        const YOUTUBE_API_KEY = "AIzaSyD9WKmGcIF6_A9Ex-oAjaeRC6naiEro6JE" //process.env.YOUTUBE_API_KEY;
+        const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
         const BASE_URL = "youtube.googleapis.com/youtube/v3";
         
         let videoData = {}
