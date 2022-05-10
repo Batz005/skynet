@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import StarBorderRoundedIcon from '@mui/icons-material/StarBorderRounded';
 import StarRateRoundedIcon from '@mui/icons-material/StarRateRounded';
 import resourcesList from "./resourcesList.json";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Link as MaterialLink,
   styled,
@@ -22,7 +22,10 @@ import {
 import { Link as LinkRouter }from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add'
 import { pageSelected } from '../../app/site';
+import { useMutation, gql  } from '@apollo/client';
 import "./Resources.css"
+import { useAuthQuery } from '@nhost/react-apollo';
+import { SettingsInputAntennaTwoTone } from '@mui/icons-material';
 
 
 
@@ -39,7 +42,7 @@ function Copyright() {
   );
 }
 
-const resources = resourcesList['resources'];
+
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 
@@ -48,9 +51,10 @@ export default function Resources() {
   const dispatch = useDispatch();
   let [open, setOpen] = useState(false);
   let [title, setTitle] = useState("")
+  let [resourcesList, setResourcesList ] = useState([])
   let [imgUrl, setImgUrl] = useState("")
   let [description, setDescription] = useState("")
-
+  const userId = useSelector((state)=>state.user.user_detail.user_id);
   const handleOpenModal = () => {   
     setOpen(true) 
 }
@@ -72,8 +76,59 @@ const modalStyle = {
   flexDirection: "row"
 }
 
-const handleResourceSubmit = (e) => {
+const INSERT_RESOURCE = gql`
+mutation InsertResource($added_by: uuid!, $description: String, $name: String, $img_url:String) {
+  insert_Resources_one(object: {added_by: $added_by, description: $description, name: $name, img_url: $img_url}){
+    resource_id
+    name
+    description
+    added_by
+    img_url
+  }
+}
+
+`
+
+const GET_RESOURCES = gql`
+query GetResources {
+  Resources {
+    added_by
+    description
+    name
+    img_url
+    resource_id
+    
+  }
+}
+`
+const [insertResource, { data, loading, error }] = useMutation(INSERT_RESOURCE);
+const queryResults = useAuthQuery(GET_RESOURCES)
+
+useEffect(() => {
+  if(queryResults.data){
+    setResourcesList(queryResults.data.Resources)
+  }
+    
+
+  
+}, [queryResults.data])
+
+const handleResourceSubmit = async (e) => {
   e.preventDefault();
+  const new_resource = await insertResource({ variables: {
+    added_by: userId,
+    name: title,
+    description: description,
+    img_url: imgUrl
+  }})
+  const new_data = new_resource.data.insert_Resources_one
+  new_data["Lectures"] = []
+  new_data["References"] = []
+  console.log(new_data)
+  setResourcesList([...resourcesList, new_data])
+  console.log(new_resource)
+  handleClose()
+
 }
 
   return (
@@ -155,11 +210,11 @@ const handleResourceSubmit = (e) => {
           <Container sx={{ py: 8 }} maxWidth="md">
             {/* End hero unit */}
             <Grid container spacing={4}>
-              {cards.map((card,i) => (
-                <Grid item key={card} xs={12} sm={6} md={4}>
+              {resourcesList.map((resource,i) => (
+                <Grid item key={i} xs={12} sm={6} md={4}>
                   <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', boxShadow: 2 }} >
                       <LinkRouter 
-                        to = {`/resources/${resources[0]}`} 
+                        to = {`/resources/${resource.resource_id}`} 
                         style = {{ textDecoration: 'none', color: 'black'}} 
                         onClick = {()=>dispatch(pageSelected({active__page: 'RESOURCE__SECTION__ACTIVE'}))}
                       >
@@ -169,15 +224,15 @@ const handleResourceSubmit = (e) => {
                                 // 16:9
                                 pt: '56.25%',
                               }}
-                              image={`https://source.unsplash.com/random/?collegesubjects/${i}`}
+                              image={resource.img_url || `https://source.unsplash.com/random/?${resource.name}/${i}`}
                               title="Image title"
                           />
                           <CardContent sx={{ flexGrow: 1 }}>
                               <Typography gutterBottom variant="h5" component="h2">
-                              {resources[i]}
+                              {resource.name}
                               </Typography>
                               <Typography>
-                              Ullamco veniam officia deserunt Lorem fugiat fugiat sit qui dolor qui.
+                              {resource.description}
                               </Typography>
                           </CardContent>
                       </LinkRouter>

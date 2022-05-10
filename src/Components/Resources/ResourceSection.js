@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Lectures from './Lectures'
 import { Container, List, ListItem, Typography, IconButton, Modal, Box, Button } from '@mui/material'
 import { Link, useParams } from 'react-router-dom'
@@ -10,60 +10,127 @@ import resourcesList from './resourcesList.json'
 import getVideoId from '../utils/getVideoId';
 import './ResourceSection.css';
 import axios from 'axios';
+import { useAuthQuery } from '@nhost/react-apollo';
+import { useMutation, gql  } from '@apollo/client';
+import { useSelector } from 'react-redux';
 
 
-
-// function generate(element) {
-//     return [0, 1, 2].map((value) =>
-//       React.cloneElement(element, {
-//         key: value,
-//       }),
-//     );
-//   }
   
-  
-  
+const GET_RESOURCE_DATA = gql`
+query GetResourceData($resource_id: uuid!) {
+    Resources_by_pk(resource_id: $resource_id) {
+      resource_id
+      Lectures {
+        lecture_id
+        title
+        published_date
+        video_id
+      }
+      References {
+        reference_id
+        url
+          }
+    }
+  }
 
+`
+  
+const INSERT_REFERENCE = gql`
+mutation MyMutation($added_by: uuid!, $resource_id: uuid!, $url:String) {
+    insert_References_one(object: {added_by: $added_by, resource_id: $resource_id, url: $url}){
+      reference_id
+      url
+    }
+  }
+
+`
+
+const INSERT_LECTURE = gql`
+mutation MyMutation($added_by: uuid!, $resource_id: uuid!, $video_id:String, $title: String) {
+    insert_Lectures_one(object: {added_by: $added_by, resource_id: $resource_id, video_id: $video_id, title: $title}){
+      lecture_id
+
+      video_id
+    }
+  }
+
+`
   
 
 
 
 function ResourceSection() {
     
-    let [open, setOpen] = useState(false);
-    let [input, setInput] = useState("")
-    const {resourceName} = useParams();
-    let [data, setData] = useState({});
+    let [openLectureModal, setOpenLectureModal] = useState(false);
+    let [openReferenceModal, setOpenReferenceModal] = useState(false);
+    let [lectureInput, setLectureInput] = useState("")
+    let [referenceInput, setReferenceInput] = useState("")
+    const {resourceId} = useParams();
+    // let [data, setData] = useState({});
     let [isRefEditEnabled, setIsRefEditEnabled] = useState(false);
-    console.log(resourceName);
-    const resource = resourcesList[resourceName];
-    console.log(resource);
+    let [resourceData, setResourceData] = useState({})
+    let [url, setUrl] = useState("")
+    const userId = useSelector((state)=>state.user.user_detail.user_id);
 
+    const queryResults = useAuthQuery(GET_RESOURCE_DATA, {
+        variables: {
+            resource_id: resourceId
+        }
+    })
     
-    const handleOpenModal = () => {   
-        setOpen(true) 
+   const [insertReference, { data, loading, error}] = useMutation(INSERT_REFERENCE)
+
+   const [insertLecture, lectureResults] = useMutation(INSERT_LECTURE)
+
+    useEffect(() => {
+        if(queryResults.data){
+          setResourceData(queryResults.data.Resources_by_pk)
+        }
+        else{
+            setResourceData({
+                "References": [],
+                "Lectures": []
+
+            })
+        }
+            
+          
+      }, [queryResults.data])
+
+    const handleOpenLectureModal = () => {   
+        setOpenLectureModal(true) 
     }
 
-    const handleClose = () => setOpen(false);
+    const handleCloseLectureModal = () => {setOpenLectureModal(false);}
 
-    const fetchVideoData =  (videoId) => {
-        const YOUTUBE_API_KEY = YOUTUBE_API_KEY;
-        const BASE_URL = "youtube.googleapis.com/youtube/v3";
+    const handleOpenReferenceModal = () => {   
+        setOpenReferenceModal(true) 
+    }
+
+    const handleCloseReferenceModal = () => {setOpenReferenceModal(false);}
+
+    const fetchVideoData = async (videoId) => {
+       
+        // let videoData = {}
+        const response = axios.post(
+            "/.netlify/functions/getVideoData/getVideoData", {
+                videoId: videoId
+            }
+        )
+        let videoData = await response
+        console.log((videoData))
         
-        let videoData = {}
-        axios.get(
-          `https://${BASE_URL}/videos?key=${YOUTUBE_API_KEY}&part=snippet&id=${videoId}`
-        ).then(res => {
-            videoData = res.data;
-            console.log(videoData)
-            setData(videoData)
-            const { title,  publishedAt } = data.items[0].snippet;
-            const thumbnailUrl = data.items[0].snippet.thumbnails.default.url;
-            const publishedDateArray = publishedAt.substr(0,10).split("-");
-            const publishedDate = publishedDateArray.reverse().join("-")
+        // .then(res => {
+        //     videoData = res.data;
+        //     console.log(videoData)
+        //     setData(videoData)
+            // const { title,  publishedAt } = data.items[0].snippet;
+            // const thumbnailUrl = data.items[0].snippet.thumbnails.default.url;
+            // const publishedDateArray = publishedAt.substr(0,10).split("-");
+            // const publishedDate = publishedDateArray.reverse().join("-")
             
-            console.log(title,  publishedDate, thumbnailUrl, publishedDateArray)
-          })
+            
+        //   })
         
         // .then(data => {
         //     console.log(data)
@@ -72,15 +139,42 @@ function ResourceSection() {
         
         // const jsonData = await response.json();
         // const videoData = await jsonData
-        
+        return videoData.data
       };
 
-    const handleUrlSubmit = (e) => {
+    const handleLectureUrlSubmit = async (e) => {
         e.preventDefault();
-        const videoId = getVideoId(input)
-        fetchVideoData(videoId)
+        const videoId = getVideoId(lectureInput)
+        const data = await fetchVideoData(videoId)
         console.log(data)
+        const new_lecture = await insertLecture({
+            variables: {
+                added_by: userId,
+                 resource_id: resourceId,
+                 title: data.title,
+                 video_id: videoId
+                 
+            }
+        })
+        resourceData.Lectures.push(new_lecture)
+        handleCloseLectureModal()
+    }
+
+    const handleReferenceUrlSubmit = async (e) => {
+        e.preventDefault();
         
+        const new_reference = await insertReference({
+            variables: {
+                 added_by: userId,
+                 resource_id: resourceId,
+                 url: referenceInput
+            }
+        })
+        console.log(queryResults.data.Resources_by_pk.References)
+        console.log(resourceData)
+        resourceData.References.push(new_reference)
+        console.log(queryResults)
+        handleCloseReferenceModal();
     }
     const modalStyle = {
         position: 'absolute',
@@ -109,19 +203,19 @@ function ResourceSection() {
                             Lectures
                         </Typography>
                         <IconButton
-                            onClick = {handleOpenModal}
+                            onClick = {handleOpenLectureModal}
                             style = {{ position: "absolute", top: "5%", right: "5%", zIndex: "5"}}
                             size="large">
                             <AddIcon style = {{ color: "blue"}}/>
                         </IconButton>
                         <hr className ="style__one" />
                         
-                        <Lectures lectureLinks = {resource.lectures}/>
+                        <Lectures resourceId = {resourceId}/>
                         
                     </div>
                     <Modal
-                        open = {open}
-                        onClose={handleClose}
+                        open = {openLectureModal}
+                        onClose={handleCloseLectureModal}
                         
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
@@ -130,12 +224,12 @@ function ResourceSection() {
                             <form  style = {{width: "100%", display: "flex", flexDirection: "row"}}>
                                 <input 
                                 type = 'text' 
-                                id = "url__input"
+                                className = "url__input"
                                 defaultValue = ""
-                                onChange = {(e)=> setInput(e.target.value)}
+                                onChange = {(e)=> setLectureInput(e.target.value)}
                                 placeholder = "Enter the youtube video URL" 
                                     />
-                                <Button variant = "contained" type = "submit" onClick = {handleUrlSubmit} color = "primary" endIcon = {<AddIcon />}>Add</Button>
+                                <Button variant = "contained" type = "submit" onClick = {handleLectureUrlSubmit} color = "primary" endIcon = {<AddIcon />}>Add</Button>
                             </form>
                             
                         </Box>
@@ -144,13 +238,13 @@ function ResourceSection() {
                 
                     {/* <iframe width="560" height="315" src="https://www.youtube.com/embed/DGQA4gxjLr8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> */}
                 
-                    <div id = "resource-section-downloads" className = "resource__section__item resource__section__downloads">
+                    {/* <div id = "resource-section-downloads" className = "resource__section__item resource__section__downloads">
                         <Typography component="h2" variant="h3" align="center" color="textPrimary" gutterBottom>
                             Downloads
                         </Typography>
                         <hr className ="style__one" />
                     </div>
-                 
+                  */}
 
                 
                     <div id = "resource-section-references" className = "resource__section__item resource__section__references">
@@ -163,11 +257,41 @@ function ResourceSection() {
                             size="large">
                             {isRefEditEnabled ? <CloseIcon style = {{ color: "red"}}/> : <EditIcon style = {{ color: "blue"}}/>} 
                         </IconButton>
+                        {
+                        isRefEditEnabled && 
+                        <IconButton
+                            onClick = {handleOpenReferenceModal}
+                            style = {{ position: "absolute", top: "5%", right: "10%", zIndex: "5"}}
+                            size="large">
+                            {<AddIcon style = {{ color: "blue"}}/>} 
+                        </IconButton>}
+
                         <hr className ="style__one" />
+                        <Modal
+                        open = {openReferenceModal}
+                        onClose={handleCloseReferenceModal}
                         
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                        >
+                        <Box sx = {modalStyle} >
+                            <form  style = {{width: "100%", display: "flex", flexDirection: "row"}}>
+                                <input 
+                                type = 'text' 
+                                className = "url__input"
+                                defaultValue = ""
+                                onChange = {(e)=> setReferenceInput(e.target.value)}
+                                placeholder = "Enter reference link" 
+                                    />
+                                <Button variant = "contained" type = "submit" onClick = {handleReferenceUrlSubmit} color = "primary" endIcon = {<AddIcon />}>Add</Button>
+                            </form>
+                            
+                        </Box>
+                        
+                    </Modal>
                         <List dense={true} sx = {{ width: "100%"}}>
                         { 
-                            resource.references.map((reference,id)=>{
+                            (resourceData?.References?.map((reference,id)=>{
                                 return (
                                 <ListItem key = {id} sx = {{ width: "100%"}}>
                                     {
@@ -177,7 +301,7 @@ function ResourceSection() {
                                             flexDirection: 'row',
                                             width: "100%"
                                         }}>
-                                            <input type = "text" defaultValue = {reference} id = "ref__input"/>
+                                            <input type = "text" defaultValue = {reference.url} id = "ref__input"/>
                                             <IconButton
                                                 onClick = {handleReferenceEdit}
                                                 style = {{ position: "absolute", top: "5%", right: "5%", zIndex: "5"}}
@@ -187,12 +311,14 @@ function ResourceSection() {
                                         </Box>
                                         
                                         ):
-                                        <a href={reference} style = {{ font: "sans-serif 10px", color: "blue"}}target="_blank" rel="noopener noreferrer" >{reference}</a>
+                                        <a href={reference.url} style = {{ font: "sans-serif 10px", color: "blue"}}target="_blank" rel="noopener noreferrer" >{reference.url}</a>
                                     }
                                     
                                 </ListItem>)
                             })
+                        )
                         }
+                        
                         </List> 
                     </div>
                   

@@ -7,7 +7,7 @@
     "EVENTS__ACTIVE":  ["Calender", "Events"],
     "ACTIVITIES__ACTIVE": ["Activities","Accomplishments"],
     "RESOURCES__ACTIVE": ["Resources"],
-    "RESOURCE__SECTION__ACTIVE": ["Lectures", "Downloads", "References"],
+    "RESOURCE__SECTION__ACTIVE": ["Lectures", "References"], 
     "MYACCOUNT__ACTIVE": ["MyAccount", "Settings"],
     "HELP__ACTIVE": ["FAQs","Feedback"]
 }

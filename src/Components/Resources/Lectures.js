@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 // import "react-image-gallery/styles/css/image-gallery.css";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 // import styles from 'react-responsive-carousel/lib/styles/carousel.min.css';
@@ -7,6 +7,8 @@ import { Carousel } from 'react-responsive-carousel';
 import getVideoId from '../utils/getVideoId';
 import ReactPlayer from 'react-player/youtube'
 import "./Lectures.css"
+import { useAuthQuery } from '@nhost/react-apollo';
+import { useMutation, gql  } from '@apollo/client';
 import { Container } from '@mui/material';
  
 // class Lectures extends React.Component {
@@ -208,6 +210,28 @@ import { Container } from '@mui/material';
 //   }
 // }
 
+const GET_RESOURCE_DATA = gql`
+query GetResourceData($resource_id: uuid!) {
+    Resources_by_pk(resource_id: $resource_id) {
+      resource_id
+      Lectures {
+        lecture_id
+        title
+        published_date
+        video_id
+      }
+      References {
+        reference_id
+        url
+          }
+    }
+  }
+
+`
+
+
+
+
 const YoutubeSlide = ({ url, isSelected }) => (
   <ReactPlayer width="100%" url={url} playing={isSelected} controls = {true} light = {true} pip = {true}/>
 );
@@ -215,20 +239,44 @@ const YoutubeSlide = ({ url, isSelected }) => (
 
 
 
-const Lectures = ({ lectureLinks }) => {
+const Lectures = ({ resourceId }) => {
+  let [resourceData, setResourceData] = useState({})
+  const queryResults = useAuthQuery(GET_RESOURCE_DATA, {
+    variables: {
+        resource_id: resourceId
+    }
+})
+
+
+
+useEffect(() => {
+    if(queryResults.data){
+      setResourceData(queryResults.data.Resources_by_pk)
+    }
+    else{
+        setResourceData({
+            "References": [],
+            "Lectures": []
+
+        })
+    }
+        
+      
+  }, [queryResults.data])
 
         // const videoId = getVideoId("https://www.youtube.com/watch?v=WX1khF8zEr4")
-        console.log(lectureLinks)
+        console.log(resourceId)
+
         const customRenderItem = (item, props) => <item.type {...item.props} {...props} />;
 
-        const getVideoThumb = (videoId) => `https://img.youtube.com/vi/${videoId}/default.jpg`;
+        const getVideoThumb = (video_id) => `https://img.youtube.com/vi/${video_id}/default.jpg`;
       
         // const getVideoId = (url) => url.substr('https://www.youtube.com/embed/'.length, url.length);
       
         const customRenderThumb = (children) =>
             children.map((item, i) => {
-                const videoId = getVideoId(item.props.url);
-                return <img key = {i} src={getVideoThumb(videoId)} />;
+                const video_id = getVideoId(item.props.url);
+                return <img key = {i} src={getVideoThumb(video_id)} />;
             });
 
 
@@ -238,9 +286,9 @@ const Lectures = ({ lectureLinks }) => {
             // </Carousel>
             <Carousel renderItem={customRenderItem} renderThumbs={customRenderThumb}>
               {
-                  lectureLinks.map((lectureLink, i) => (
+                  resourceData?.Lectures?.map((lecture, i) => (
 
-                    <YoutubeSlide key={`youtube-${i}`} url={`https://www.youtube.com/embed/${lectureLink}`} />
+                    <YoutubeSlide key={`youtube-${i}`} url={`https://www.youtube.com/embed/${lecture.video_id}`} />
                         // <iframe 
                         //   width="560" 
                         //   height="315" 

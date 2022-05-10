@@ -80,7 +80,7 @@ function MiddleSection() {
                 <Route path = "/activities" exact element = {<Activities />} />
             
                 <Route path = "/resources" exact element = {<Resources />} />
-                <Route path = "/resources/:resourceName" exact element = {<ResourceSection />} />    
+                <Route path = "/resources/:resourceId" exact element = {<ResourceSection />} />    
                 <Route path = "/myaccount/:userId" exact element = {<MyAccount />} />
                 <Route path = "/help" exact element = {<Help />} />   
             </Routes>
