@@ -73,7 +73,7 @@ function MiddleSection() {
                     </Route>
                 } */}
                 
-                <Route path ="/friends" exact element = {<Friends />} />
+                {/* <Route path ="/friends" exact element = {<Friends />} /> */}
                 <Route path = "/clubs" exact element = {<Clubs />} />
                 <Route path = "/clubs/clubinfo/:clubName" exact element = {<ClubInfo />} />
                 <Route path = "/events" exact element = {<Events />}/>

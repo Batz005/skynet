@@ -76,7 +76,7 @@ function Header() {
                     </Link>
                 </Tooltip>
 
-                <Tooltip title = "Friends" placement = "bottom">
+                {/* <Tooltip title = "Friends" placement = "bottom">
                     <Link to = "/friends">
                         <div 
                             id = "header__friends" 
@@ -92,7 +92,7 @@ function Header() {
                             }
                         </div>
                     </Link>     
-                </Tooltip>
+                </Tooltip> */}
 
                 <Tooltip title = "Clubs" placement = "bottom">
                     <Link to ="/clubs">
