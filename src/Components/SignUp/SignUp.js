@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import GoTrue from 'gotrue-js';
+import axios from 'axios'
 import "./SignUp.css"
-import { Grid, TextField } from '@mui/material';
+import { Grid, TextField, Button, Select, MenuItem } from '@mui/material';
 
 
 const auth = new GoTrue({
@@ -14,16 +15,17 @@ const SignUp = () => {
     const [ email, setEmail ] = useState('');
     const [ password, setPassword ] = useState('');
     const [ first, setFirst ] = useState('');
-    const [ userMetadata, setUserMetaData] = useState({})
+    const [role, setRole] = React.useState('');
+    const [ user_metadata, setUserMetaData] = useState({})
 
     const onTextFieldChange = (e) => {
-        const label = e.target.label;
+        
         const value = e.target.value;
         setUserMetaData({
-            ...userMetadata,
-            label: value,
+            ...user_metadata,
+            [e.target.name]: value,
         })
-        
+        console.log(user_metadata)
     }
     const onEmailChange = (e)=>{
         setEmail(e.target.value);
@@ -35,13 +37,16 @@ const SignUp = () => {
         console.log(e.target.value);
     }
 
+    const onRoleChange = (e) => {
+        setRole(e.target.value);
 
-    const handleSignUp =  (e) =>{
+    }
+    const handleSignUp =  async (e) =>{
         e.preventDefault();
         
           
         try {
-            const signupData = async (email, password, user_metadata) => {
+            
        
                 // let videoData = {}
                 // const response = axios.post(
@@ -49,18 +54,19 @@ const SignUp = () => {
                 //         user: {
                 //             email: email,
                 //             password: password,
+                //             role: role,
                 //             user_metadata: user_metadata
                 //         }
                 //     }
                 // )
-                let data = {}
-                auth.signup(email, password,)
-                .then((response) => {
-                    data = response;
-                    console.log('Confirmation email sent', response)})
-                .catch((error) => console.log("It's an error", error));
-                // let data = await response
-                // console.log((data))
+                
+                // let data = {};
+                // console.log(data)
+                const response = auth.signup(email, password,user_metadata)
+                const data = await response
+                
+                
+                console.log((data))
                 
                 // .then(res => {
                 //     videoData = res.data;
@@ -81,11 +87,10 @@ const SignUp = () => {
                 
                 // const jsonData = await response.json();
                 // const videoData = await jsonData
-                return data.data
-              };
+                
         }catch(error) {
-            console.log("error signing up")
-            handleClick()
+            console.log("error signing up", error)
+            
         }
         
 
@@ -122,7 +127,7 @@ const SignUp = () => {
   return (
     <>
     <form className = "signup__form">
-            <h1 style= {{ fontFamily: "serif", marginBottom: "1em"}}>Sign In</h1>
+            <h1 style= {{ fontFamily: "serif", marginBottom: "1em"}}>Sign Up</h1>
             <span style = {{display: "flex", flexDirection: "row", marginleft: "0.90em", marginRight: "0.75em", alignItems: "center"}}>
             
             
@@ -149,42 +154,54 @@ const SignUp = () => {
                             </Grid>
                             
                             <Grid item key = "3" md = {6} sm = {6} xs = {12} style = {{ display: "flex", justifyContent: "center"}}>
-                                <TextField variant = "outlined" color = "primary" label = "First Name" defaultValue = {first_name} onChange = {onTextFieldChange} />
+                                <TextField variant = "outlined" color = "primary" label = "First Name" name = "first_name" onChange = {onTextFieldChange} />
                             </Grid>
                             <Grid item key = "4" md = {6} sm = {6} xs = {12} style = {{ display: "flex", justifyContent: "center"}}>
-                                <TextField variant = "outlined" color = "primary" label = "Last Name" defaultValue = {last_name} onChange = {onTextFieldChange} />
+                                <TextField variant = "outlined" color = "primary" label = "Last Name" name = "last_name" onChange = {onTextFieldChange} />
                             </Grid>
                             
                             {/* <Grid item key = "5" md = {6} sm = {6} xs = {12} style = {{ display: "flex", justifyContent: "center"}}>
                                 <TextField variant = "outlined" color = "primary" label = "Personal Email" defaultValue = {personal_email?personal_email:"Not Provided"} type = "email" InputProps = {{ readOnly: isInputDisabled }}/>
                             </Grid> */}
                             <Grid item key = "5" md = {6} sm = {6} xs = {12} style = {{ display: "flex", justifyContent: "center"}}>
-                                <TextField variant = "outlined" color = "primary" label = "Mobile No." defaultValue = {mobile} onChange = {onTextFieldChange}/>
+                                <TextField variant = "outlined" color = "primary" label = "Mobile No." name = "mobile" onChange = {onTextFieldChange}/>
                             </Grid>
                             
                             
                             <Grid item key = "6" md = {6} sm = {6} xs = {12} style = {{ display: "flex", justifyContent: "center"}}>
-                                <TextField variant = "outlined" color = "secondary" label = "Date of Birth" defaultValue = {date_of_birth.slice(0,10)} type = "date" onChange = {onTextFieldChange}/>
+                                <TextField variant = "outlined" color = "secondary" label = "Date of Birth" name = "date_of_birth" type = "date" onChange = {onTextFieldChange}/>
                             </Grid>
                             <Grid item key = "7" md = {6} sm = {6} xs = {12} style = {{ display: "flex", justifyContent: "center"}}>
-                                <TextField variant = "outlined" color = "secondary" label = "Section" defaultValue = {section} onChange = {onTextFieldChange} />
+                                <TextField variant = "outlined" color = "secondary" label = "Section" name = "section"  onChange = {onTextFieldChange} />
                             </Grid>
                             <Grid item key = "8" md = {6} sm = {6} xs = {12} style = {{ display: "flex", justifyContent: "center"}}>
-                                <TextField variant = "outlined" color = "secondary" label = "Branch" defaultValue = {branch}  onChange = {onTextFieldChange}/>
+                                <TextField variant = "outlined" color = "secondary" label = "Branch"  name = "branch" onChange = {onTextFieldChange}/>
                             </Grid>
 
                             <Grid item key = "9" md = {6} sm = {6} xs = {12} style = {{ display: "flex", justifyContent: "center"}}>
-                                <TextField variant = "outlined" color = "secondary" label = "Semester" defaultValue = {semester}  onChange = {onTextFieldChange}/>
+                                <TextField variant = "outlined" color = "secondary" label = "Semester" name = "semester"  onChange = {onTextFieldChange}/>
                             </Grid>
                             
                             <Grid item key = "10" md = {6} sm = {6} xs = {12} style = {{ display: "flex", justifyContent: "center"}}>
-                                <TextField variant = "outlined" color = "secondary" label = "Mentor Name" defaultValue = {mentor_name} onChange = {onTextFieldChange} />
+                                <TextField variant = "outlined" color = "secondary" label = "Mentor Name" name = "mentor_name" onChange = {onTextFieldChange} />
                             </Grid>
                             <Grid item key = "11" md = {6} sm = {6} xs = {12} style = {{ display: "flex", justifyContent: "center"}}>
-                                <TextField variant = "outlined" color = "secondary" label = "Mentor Email" defaultValue = {mentor_email} onChange = {onTextFieldChange} />
+                                <TextField variant = "outlined" color = "secondary" label = "Mentor Email"  name = "mentor_email" onChange = {onTextFieldChange} />
                             </Grid>
                             <Grid item key = "12" md = {6} sm = {6} xs = {12} style = {{ display: "flex", justifyContent: "center"}}>
-                                <TextField variant = "outlined" color = "secondary" label = "Something" defaultValue = "something" />
+                                <Select
+                                    value={role}
+                                    label="Role"
+                                    name = "role"
+                                    onChange={onRoleChange}
+                                    >
+                                    <MenuItem value="">
+                                        <em>None</em>
+                                    </MenuItem>
+                                    <MenuItem value={"user"}>user</MenuItem>
+                                    <MenuItem value={"staff"}>staff</MenuItem>
+                                    <MenuItem value={"admin"}>admin</MenuItem>
+                                </Select>
                             </Grid>
                         </Grid>
             <div className = "signup__button__link" style = {{ textDecoration: "none", color:"whitesmoke"}}>

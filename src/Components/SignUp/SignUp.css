@@ -3,8 +3,8 @@
     background-color: white;
 
     filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#0061FF", endColorstr="#60EFFF", GradientType=1 );
-    width: 15em;
-    height: 22em;
+    width: fit-content;
+    height: fit-content;
     position: absolute;
     left: 50%;
     top: 50%;

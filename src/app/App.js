@@ -13,6 +13,7 @@ import RightSection from '../Containers/RightSection/RightSection';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 // import LinearIndeterminate from '../utils/LinearIndertiminate';
 import {  Fab } from '@mui/material';
+import SignUp from '../Components/SignUp/SignUp';
 
 const customTheme = createTheme(({
   palette: {
@@ -63,7 +64,7 @@ const App = () => {
       <ThemeProvider theme = {customTheme}>
         <div className="app">
         {/* {isLoading && <LinearIndeterminate /> } */}
-        <Router>
+        {/* <Router>
           {(!isSignedIn)
           ?(<SignIn />)
           :(<>
@@ -75,14 +76,14 @@ const App = () => {
                 </Fab>
                 <MiddleSection />
                 <RightSection />
-                {/*Notices*/}
+               
               </div>
             </>
           )}
         </Router>
             
-      
-        
+       */}
+        <SignUp />
           
         </div>
       </ThemeProvider>
