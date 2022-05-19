@@ -1,5 +1,6 @@
-import { Button, TextField, Snackbar, Alert as MuiAlert } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import { Button, TextField, Snackbar } from '@mui/material';
+
+
 import React,{ useEffect, useState } from 'react'
 import { Link, useNavigate, useLocation} from 'react-router-dom'
 import { useSelector, useDispatch} from 'react-redux'
@@ -13,11 +14,11 @@ import { gql,useQuery } from '@apollo/client'
 import { GET_USER_DETAILS } from '../../apollo/hasura.js'
 
 import "./SignInForm.css"
+import MuiAlert from '@mui/material/Alert';
 
-function Alert(props) {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
-  }
-
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
  
 function SignInForm() {
 
@@ -25,7 +26,7 @@ function SignInForm() {
     const [ email, setEmail ] = useState('');
     const [ password, setPassword ] = useState('');
     const [ isSignedIn, setIsSignedIn ] = useState(false);
-    const domain = "@cbit.org.in"
+    
     const navigate = useNavigate();
     let location = useLocation();
     const {
@@ -37,9 +38,8 @@ function SignInForm() {
           
     const id = useUserId()
     let from = location.state?.from?.pathname || "/home";
-  
     const [open, setOpen] = React.useState(false);
-  
+
     const handleClick = () => {
       setOpen(true);
     };
@@ -53,7 +53,7 @@ function SignInForm() {
     };
 
     const onEmailChange = (e)=>{
-        setEmail(e.target.value + domain);
+        setEmail(e.target.value);
         console.log(email);
     }
 
@@ -126,6 +126,7 @@ function SignInForm() {
             dispatch(subPageSelected({active__subPage: 'FEED__SUBPAGE__ACTIVE'}));
             dispatch(signInStatus({isSignedIn: true}));
             navigate(from, { replace: true })
+            
     }
     console.log(data, error, loading)
     
@@ -146,10 +147,8 @@ function SignInForm() {
         <>
             <form className = "signin__form">
                     <h1 style= {{ fontFamily: "serif", marginBottom: "1em"}}>Sign In</h1>
-                    <span style = {{display: "flex", flexDirection: "row", marginleft: "0.90em", marginRight: "0.75em", alignItems: "center"}}>
+                    
                     <TextField id = "SignInEmail" style = {{marginLeft: "0.85em"}} onChange = {onEmailChange} size = "small" color = "primary" label = 'Email' variant = "outlined" />
-                    @cbit.org.in
-                    </span>
                     <TextField
                         id="outlined-password-input"
                         label="Password"
@@ -159,13 +158,15 @@ function SignInForm() {
                         size = "small"
                         onChange = {onPasswordChange}
                     />
+                    
+                    
                     <div className = "signin__button__link" style = {{ textDecoration: "none", color:"whitesmoke"}}>
                         <Button onClick = {handleSignIn} type = "submit" variant = "contained" ><strong>Sign In</strong></Button> 
                     </div>
                     <h5 style = {{ textDecoration: "underline", cursor: "pointer"}}>Forgot Password?</h5>
             </form>
-            <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
-                <Alert onClose={handleClose} severity="error">
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="error"  sx={{ width: '100%' }}>
                     Incorrect Login Credentials
                 </Alert>
             </Snackbar>
