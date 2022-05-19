@@ -2,14 +2,22 @@ import React, { useState } from 'react'
 import GoTrue from 'gotrue-js';
 import axios from 'axios'
 import "./SignUp.css"
-import { Grid, TextField, Button, Select, MenuItem } from '@mui/material';
+import { Grid, TextField, Button, Select, MenuItem, Snackbar } from '@mui/material';
+import auth from '../../lib/netAuth';
 
+import MuiAlert from '@mui/material/Alert';
 
-const auth = new GoTrue({
-    APIUrl: `${process.env.DOMAIN_URL}/.netlify/identity`,
-    audience: '',
-    setCookie: false,
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
+ 
+ 
+
+// const auth = new GoTrue({
+//     APIUrl: `${process.env.PUBLIC_URL}/.netlify/identity`,
+//     audience: '',
+//     setCookie: false,
+//   });
 
 const SignUp = () => {
     const [ email, setEmail ] = useState('');
@@ -17,6 +25,22 @@ const SignUp = () => {
     const [ first, setFirst ] = useState('');
     const [role, setRole] = React.useState('');
     const [ user_metadata, setUserMetaData] = useState({})
+
+
+    const [open, setOpen] = React.useState(false);
+
+    const handleClick = () => {
+      setOpen(true);
+    };
+  
+    const handleClose = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+  
+      setOpen(false);
+    };
+
 
     const onTextFieldChange = (e) => {
         
@@ -47,7 +71,7 @@ const SignUp = () => {
           
         try {
             
-       
+               
                 // let videoData = {}
                 // const response = axios.post(
                 //     "/.netlify/functions/identity-signup/identity-signup", {
@@ -62,12 +86,16 @@ const SignUp = () => {
                 
                 // let data = {};
                 // console.log(data)
-                const response = auth.signup(email, password,user_metadata)
+                const response = auth.signup(email, password, user_metadata)
                 const data = await response
                 
                 
                 console.log((data))
-                
+                if(data){
+                    
+                    handleClick()
+
+                }
                 // .then(res => {
                 //     videoData = res.data;
                 //     console.log(videoData)
@@ -169,7 +197,9 @@ const SignUp = () => {
                             
                             
                             <Grid item key = "6" md = {6} sm = {6} xs = {12} style = {{ display: "flex", justifyContent: "center"}}>
-                                <TextField variant = "outlined" color = "secondary" label = "Date of Birth" name = "date_of_birth" type = "date" onChange = {onTextFieldChange}/>
+                                <TextField variant = "outlined" color = "secondary" label = "Date of Birth" name = "date_of_birth" type = "date" InputLabelProps={{
+                                        shrink: true,
+                                    }} onChange = {onTextFieldChange}/>
                             </Grid>
                             <Grid item key = "7" md = {6} sm = {6} xs = {12} style = {{ display: "flex", justifyContent: "center"}}>
                                 <TextField variant = "outlined" color = "secondary" label = "Section" name = "section"  onChange = {onTextFieldChange} />
@@ -193,11 +223,10 @@ const SignUp = () => {
                                     value={role}
                                     label="Role"
                                     name = "role"
+                                    
                                     onChange={onRoleChange}
                                     >
-                                    <MenuItem value="">
-                                        <em>None</em>
-                                    </MenuItem>
+                                    
                                     <MenuItem value={"user"}>user</MenuItem>
                                     <MenuItem value={"staff"}>staff</MenuItem>
                                     <MenuItem value={"admin"}>admin</MenuItem>
@@ -207,6 +236,12 @@ const SignUp = () => {
             <div className = "signup__button__link" style = {{ textDecoration: "none", color:"whitesmoke"}}>
                 <Button onClick = {handleSignUp} type = "submit" variant = "contained" ><strong>Sign Up</strong></Button> 
             </div>
+            <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="success"  sx={{ width: '100%' }}>
+                    Successfully Signed Up!!
+                </Alert>
+            </Snackbar>
+            
     </form>
     
 </>

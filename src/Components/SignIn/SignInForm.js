@@ -12,7 +12,7 @@ import { useAuthenticated, useUserRoles,useSignInEmailPassword, useAccessToken, 
 import { useAuthQuery } from '@nhost/react-apollo';
 import { gql,useQuery } from '@apollo/client'
 import { GET_USER_DETAILS } from '../../apollo/hasura.js'
-
+import auth from '../../lib/netAuth';
 import "./SignInForm.css"
 import MuiAlert from '@mui/material/Alert';
 
