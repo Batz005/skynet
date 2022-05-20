@@ -3,7 +3,7 @@ import { StreamChat } from 'stream-chat';
 import { Chat, Channel, ChannelHeader, MessageInput, MessageList, Thread, Window } from 'stream-chat-react';
 import Cookies from 'universal-cookie';
 
-import { ChannelListContainer, ChannelContainer, Auth } from './messengerUtils';
+import { ChannelListContainer, ChannelContainer } from './messengerUtils';
 
 import 'stream-chat-react/dist/css/index.css';
 import './Messenger.css';
