@@ -8,20 +8,20 @@ const handler = async (event, context) => {
 
   // send account information along with the POST
   const bodyData = JSON.parse(event.body)
-  const { added_by, description, title, img_url } = bodyData
+  const { id }  = bodyData
   let Token = ""
   async function fetchGraphQL(operationsDoc, operationName, variables) {
 
     console.log(bodyData)
     Token = jwt.sign(
       {
-        
+       
         iat: Math.floor(Date.now() / 1000),
         exp: Math.floor(Date.now() / 1000 + 7 * 24 * 60 * 60),
         "https://hasura.io/jwt/claims": {
           "x-hasura-allowed-roles": ["user", "admin"],
           "x-hasura-default-role": "user",
-          "x-hasura-user-id": `${added_by}`,
+          "x-hasura-user-id": `${id}`,
         },
       },
       process.env.JWT_SECRET
@@ -48,27 +48,27 @@ const handler = async (event, context) => {
   
 
   const operationsDoc = `
-  mutation InsertResource($added_by: uuid!, $description: String, $title: String, $img_url: String) {
-    insert_Resources_one(object: {added_by: $added_by, description: $description, title: $title, img_url: $img_url}) {
-      id
-      title
-      description
+  query MyQuery {
+    Resources {
       added_by
+      description
+      id
       img_url
+      title
     }
   }
 `;
 
-function executeInsertResource(added_by, description, title, img_url) {
+function fetchMyQuery() {
   return fetchGraphQL(
     operationsDoc,
-    "InsertResource",
-    {"added_by": added_by, "description": description, "title": title, "img_url": img_url}
+    "MyQuery",
+    {}
   );
 }
 
-async function startExecuteInsertResource(added_by, description, title, img_url) {
-  const { errors, data } = await executeInsertResource(added_by, description, title, img_url);
+
+  const { errors, data } = await fetchMyQuery();
 
   if (errors) {
     // handle those errors like a pro
@@ -77,17 +77,16 @@ async function startExecuteInsertResource(added_by, description, title, img_url)
 
   // do something great with this precious data
   console.log(data);
-}
 
   
-  const response = startExecuteInsertResource(added_by, description, title, img_url);
+//   const response = startFetchMyQuery();
   
   
-  console.log(response)
+  console.log(data, "85")
 
   return {
     statusCode: 200,
-    body: JSON.stringify(response),
+    body: JSON.stringify(data),
   }
 }
 

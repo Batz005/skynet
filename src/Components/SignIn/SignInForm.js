@@ -15,13 +15,14 @@ import { GET_USER_DETAILS } from '../../apollo/hasura.js'
 import auth from '../../lib/netAuth';
 import "./SignInForm.css"
 import MuiAlert from '@mui/material/Alert';
+import Cookies from 'universal-cookie';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
  
 function SignInForm() {
-
+    const cookies = new Cookies();
     const dispatch = useDispatch();
     const [ email, setEmail ] = useState('');
     const [ password, setPassword ] = useState('');
@@ -29,14 +30,14 @@ function SignInForm() {
     
     const navigate = useNavigate();
     let location = useLocation();
-    const {
-        signInEmailPassword,
-        isLoading,
-        isSuccess,
-        isError
-      } = useSignInEmailPassword()
+    // const {
+    //     signInEmailPassword,
+    //     isLoading,
+    //     isSuccess,
+    //     isError
+    //   } = useSignInEmailPassword()
           
-    const id = useUserId()
+    // const id = useUserId()
     let from = location.state?.from?.pathname || "/home";
     const [open, setOpen] = React.useState(false);
 
@@ -64,17 +65,48 @@ function SignInForm() {
 
     
     
-    const handleSignIn =  (e) =>{
+    const handleSignIn = async (e) =>{
         e.preventDefault();
-
+        let data = {}
         try {
-            signInEmailPassword(email, password)
+            const response = auth.login(email, password, true)
+  
+            data = await response;
+            console.log(data)
         }catch(error) {
             console.log("error signing in")
             handleClick()
         }
         
+        if(data){
+                const loginResponse = axios.post("./.netlify/functions/login/login",{
+                    
+                    id: data.id
+                    
+                    
+                })
+                const loginData = await loginResponse;
+                console.log(loginData.data)
+                const URL = '/.netlify/functions';
+                        const fullName = data.user_metadata.first_name + " " + data.user_metadata.last_name
+                
+                        const { data: { token, userId } } = await axios.post(`${URL}/loginUser/loginUser`, {
+                            username: data.user_metadata.first_name, fullName: fullName, phoneNumber:data.user_metadata.mobile, id: data.id
+                        });
+                        cookies.set('token', token);
+                        cookies.set('username', data.user_metadata.first_name);
+                        cookies.set('fullName', fullName);
+                        cookies.set('userId', userId);
 
+                        
+            dispatch(addUserData({...data.user_metadata, id: data.id, email: data.email, role: loginData.data.role, token: loginData.data.token}))
+            
+                dispatch(pageSelected({active__page: 'HOME__ACTIVE'}));
+                dispatch(subPageSelected({active__subPage: 'FEED__SUBPAGE__ACTIVE'}));
+                dispatch(signInStatus({isSignedIn: true}));
+                navigate(from, { replace: true })
+                
+        }
         
 
         // if (isAuthenticated){
@@ -105,7 +137,7 @@ function SignInForm() {
         // })
     }
     
-    const { isAuthenticated } = useAuthenticated()
+    // const { isAuthenticated } = useAuthenticated()
     
     let user = {}
     
@@ -113,22 +145,13 @@ function SignInForm() {
     console.log(user)
     
     // const token = useAccessToken("X-Hasura-User-id")
-    const { loading, data, error } = useAuthQuery(GET_USER_DETAILS,{
-        variables: {
-            user_id: id
-        },
-    });
-    if(data){
-        
-        dispatch(addUserData(data["user"]))
-        
-            dispatch(pageSelected({active__page: 'HOME__ACTIVE'}));
-            dispatch(subPageSelected({active__subPage: 'FEED__SUBPAGE__ACTIVE'}));
-            dispatch(signInStatus({isSignedIn: true}));
-            navigate(from, { replace: true })
-            
-    }
-    console.log(data, error, loading)
+    // const { loading, data, error } = useQuery(GET_USER_DETAILS,{
+    //     variables: {
+    //         user_id: id
+    //     },
+    // });
+    
+    // console.log(data, error, loading)
     
     // useEffect(()=>{
     //     if (isAuthenticated){

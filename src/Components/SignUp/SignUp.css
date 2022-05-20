@@ -1,7 +1,7 @@
 .signup__form {
     /* background: rgb(13, 60, 136); */
     background-color: white;
-
+    margin-top: 25em;
     filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#0061FF", endColorstr="#60EFFF", GradientType=1 );
     width: fit-content;
     height: fit-content;

@@ -13,6 +13,7 @@ import MyAccount from '../../Components/MyAccount/MyAccount'
 import Friends from '../../Components/Friends/Friends'
 import { Container } from '@mui/material'
 import nhost from '../../lib/nhost'
+import SignUp from '../../Components/SignUp/SignUp'
 
 import "./MiddleSection.css";
 import SignIn from '../../Components/SignIn/SignIn';
@@ -83,6 +84,7 @@ function MiddleSection() {
                 <Route path = "/resources/:resourceId" exact element = {<ResourceSection />} />    
                 <Route path = "/myaccount/:userId" exact element = {<MyAccount />} />
                 <Route path = "/help" exact element = {<Help />} />   
+                <Route path = "/signup" exact element = {<SignUp />} />
             </Routes>
         </Container>
     )

@@ -1,4 +1,20 @@
-const fetch = require('node-fetch')
+
+ 
+  
+
+
+  const fetch = require('node-fetch')
+
+/*
+This is an example snippet - you should consider tailoring it
+to your service.
+*/
+/*
+Add these to your `package.json`:
+  "node-fetch": "^2.5.0"
+*/
+
+// Node doesn't implement fetch so we have to import it
 const jwt = require('jsonwebtoken')
 
 
@@ -46,7 +62,6 @@ const handler = async (event, context) => {
     return await result.json();
   }
   
-
   const operationsDoc = `
   mutation InsertResource($added_by: uuid!, $description: String, $title: String, $img_url: String) {
     insert_Resources_one(object: {added_by: $added_by, description: $description, title: $title, img_url: $img_url}) {
@@ -67,7 +82,7 @@ function executeInsertResource(added_by, description, title, img_url) {
   );
 }
 
-async function startExecuteInsertResource(added_by, description, title, img_url) {
+
   const { errors, data } = await executeInsertResource(added_by, description, title, img_url);
 
   if (errors) {
@@ -77,17 +92,16 @@ async function startExecuteInsertResource(added_by, description, title, img_url)
 
   // do something great with this precious data
   console.log(data);
-}
 
   
-  const response = startExecuteInsertResource(added_by, description, title, img_url);
+//   const response = startExecuteInsertResource(added_by, description, title, img_url);
   
   
-  console.log(response)
+  
 
   return {
     statusCode: 200,
-    body: JSON.stringify(response),
+    body: JSON.stringify(data),
   }
 }
 

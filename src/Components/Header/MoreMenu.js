@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { pageSelected, signInStatus, subPageSelected } from '../../app/site';
-
+import Cookies from 'universal-cookie';
 
 import {
   styled,
@@ -17,7 +17,8 @@ import {
 } from '@mui/material';
 import { useSignOut } from '@nhost/react'
 import nhost from '../../lib/nhost';
-
+import auth from '../../lib/netAuth';
+import { useSelector } from 'react-redux';
 // const PREFIX = 'MoreMenu';
 
 // const classes = {
@@ -41,11 +42,12 @@ import nhost from '../../lib/nhost';
 
 
 export default function MoreMenu() {
-
+  const cookies = new Cookies();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
-  const {signOut, isSuccess} = useSignOut()
-
+  // const {signOut, isSuccess} = useSignOut()
+  const role = useSelector((state)=>state.user.role)
+  console.log(role, "moremenu")
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
@@ -88,19 +90,32 @@ export default function MoreMenu() {
     dispatch(pageSelected({active__page: 'MYACCOUNT__ACTIVE'}));
     dispatch(subPageSelected({active__subPage: 'PROFILE__SUBPAGE__ACTIVE'}));
   }
-  
+  const handleSignUpClicked = (event) => {
+    handleClose(event)
+    dispatch(pageSelected({active__page: 'SIGNUP__ACTIVE'}));
+    dispatch(subPageSelected({active__subPage: 'SIGNUP__ACTIVE'}));
+  }
   const handleLogOutClicked =  (e)=>{
     handleClose(e);
     
     
     
     try {
-      signOut()
+      const user = auth.currentUser();
+      
+      user
+      .logout()
+      .then(response => console.log("User logged out"))
+      
     }catch(error){
       console.log("Sign Out Unsuccessful - ")
       console.error(error)
     }
-    
+      cookies.remove("token");
+        cookies.remove('userId');
+        cookies.remove('username');
+        cookies.remove('fullName');
+        
     dispatch(signInStatus({isSignedIn: false}))
   }
 
@@ -128,6 +143,9 @@ export default function MoreMenu() {
                     <Link to = "/myaccount/username" style = {{textDecoration: 'none', color: 'black'}}>
                       <MenuItem onClick={handleOnMyAccountClicked}>My account</MenuItem>
                     </Link>
+                    {(role === "admin") && <Link to = "/signup" style = {{textDecoration: 'none', color: 'black'}}>
+                      <MenuItem onClick={handleSignUpClicked}>Sign Up</MenuItem>
+                    </Link>}
                     <Link to="/help" style = {{ textDecoration: 'none', color: 'black'}}>
                       <MenuItem onClick={handleHelpClicked}>Help</MenuItem>
                     </Link>

@@ -22,11 +22,11 @@ import {
 import { Link as LinkRouter }from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add'
 import { pageSelected } from '../../app/site';
-import { useMutation, gql  } from '@apollo/client';
+import { useMutation, gql, useQuery  } from '@apollo/client';
 import "./Resources.css"
 import { useAuthQuery } from '@nhost/react-apollo';
 import { SettingsInputAntennaTwoTone } from '@mui/icons-material';
-
+import axios from 'axios';
 
 
 function Copyright() {
@@ -46,7 +46,7 @@ function Copyright() {
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 
-export default function Resources() {
+export default  function Resources() {
 
   const dispatch = useDispatch();
   let [open, setOpen] = useState(false);
@@ -54,7 +54,8 @@ export default function Resources() {
   let [resourcesList, setResourcesList ] = useState([])
   let [imgUrl, setImgUrl] = useState("")
   let [description, setDescription] = useState("")
-  const userId = useSelector((state)=>state.user.user_detail.user_id);
+  let [queryData, setQueryData] = useState(null)
+  const userId = useSelector((state)=>state.user.id);
   const handleOpenModal = () => {   
     setOpen(true) 
 }
@@ -76,61 +77,81 @@ const modalStyle = {
   flexDirection: "row"
 }
 
-const INSERT_RESOURCE = gql`
-mutation InsertResource($added_by: uuid!, $description: String, $name: String, $img_url:String) {
-  insert_Resources_one(object: {added_by: $added_by, description: $description, name: $name, img_url: $img_url}){
-    resource_id
-    name
-    description
-    added_by
-    img_url
-  }
-}
+// const INSERT_RESOURCE = gql`
+// mutation InsertResource($added_by: uuid!, $description: String, $title: String, $img_url:String) {
+//   insert_Resources_one(object: {added_by: $added_by, description: $description, title: $title, img_url: $img_url}){
+//     id
+//     title
+//     description
+//     added_by
+//     img_url
+//   }
+// }
 
-`
+// `
 
-const GET_RESOURCES = gql`
-query GetResources {
-  Resources {
-    added_by
-    description
-    name
-    img_url
-    resource_id
+// const GET_RESOURCES = gql`
+// query GetResources {
+//   Resources {
+//     added_by
+//     description
+//     name
+//     img_url
+//     resource_id
     
-  }
-}
-`
-const [insertResource, { data, loading, error }] = useMutation(INSERT_RESOURCE);
-const queryResults = useAuthQuery(GET_RESOURCES)
+//   }
+// }
+// `
+// const [insertResource, { data, loading, error }] = useMutation(INSERT_RESOURCE);
 
-useEffect(() => {
-  if(queryResults.data){
-    setResourcesList(queryResults.data.Resources)
-  }
+
+
+
+
+useEffect(async () => {
+  const response = axios.post("/.netlify/functions/getResources/getResources", {
     
+    
+      id:userId
+    
+  })
+  const data = await response
+   
+  
+  
+ console.log(data)
+ setResourcesList(data.data.Resources)
+  console.log(resourcesList)
 
   
-}, [queryResults.data])
+}, [])
+console.log(Array.isArray(resourcesList))
 
 const handleResourceSubmit = async (e) => {
   e.preventDefault();
-  const new_resource = await insertResource({ variables: {
+  const new_response = axios.post("/.netlify/functions/insertResource/insertResource", { 
     added_by: userId,
-    name: title,
+    title: title,
     description: description,
     img_url: imgUrl
-  }})
-  const new_data = new_resource.data.insert_Resources_one
-  new_data["Lectures"] = []
-  new_data["References"] = []
+  })
+  const new_data = await new_response
+  const new_resource = new_data.data.insert_Resources_one
+  new_response["Lectures"] = []
+  new_response["References"] = []
   console.log(new_data)
-  setResourcesList([...resourcesList, new_data])
+  setResourcesList([...resourcesList, new_resource])
   console.log(new_resource)
   handleClose()
 
 }
 
+const handleResourceClicked = (e) => {
+  dispatch(pageSelected({active__page: 'RESOURCE__SECTION__ACTIVE'}))
+
+}
+
+console.log(resourcesList)
   return (
      
       <main>
@@ -214,9 +235,9 @@ const handleResourceSubmit = async (e) => {
                 <Grid item key={i} xs={12} sm={6} md={4}>
                   <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', boxShadow: 2 }} >
                       <LinkRouter 
-                        to = {`/resources/${resource.resource_id}`} 
+                        to = {`/resources/${resource.id}`} 
                         style = {{ textDecoration: 'none', color: 'black'}} 
-                        onClick = {()=>dispatch(pageSelected({active__page: 'RESOURCE__SECTION__ACTIVE'}))}
+                        onClick = {handleResourceClicked}
                       >
                           <CardMedia
                               
@@ -224,12 +245,12 @@ const handleResourceSubmit = async (e) => {
                                 // 16:9
                                 pt: '56.25%',
                               }}
-                              image={resource.img_url || `https://source.unsplash.com/random/?${resource.name}/${i}`}
+                              image={resource.img_url || `https://source.unsplash.com/random/?${resource.title}/${i}`}
                               title="Image title"
                           />
                           <CardContent sx={{ flexGrow: 1 }}>
                               <Typography gutterBottom variant="h5" component="h2">
-                              {resource.name}
+                              {resource.title}
                               </Typography>
                               <Typography>
                               {resource.description}

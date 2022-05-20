@@ -9,6 +9,7 @@
     "RESOURCES__ACTIVE": ["Resources"],
     "RESOURCE__SECTION__ACTIVE": ["Lectures", "References"], 
     "MYACCOUNT__ACTIVE": ["MyAccount", "Settings"],
-    "HELP__ACTIVE": ["FAQs","Feedback"]
+    "HELP__ACTIVE": ["FAQs","Feedback"],
+    "SIGNUP__ACTIVE": []
 }
 

@@ -34,7 +34,7 @@ import { pageSelected,subPageSelected } from '../../app/site';
 
 function Header() {
     
-    const username = useSelector((state)=>state.user.user_detail.first_name);
+    const username = useSelector((state)=>state.user.first_name);
     console.log(username);
     const active__page = useSelector((state) => state.site.active__page);
     console.log(active__page);

@@ -4,6 +4,11 @@ import axios from 'axios'
 import "./SignUp.css"
 import { Grid, TextField, Button, Select, MenuItem, Snackbar } from '@mui/material';
 import auth from '../../lib/netAuth';
+import Cookies from 'universal-cookie';
+
+
+
+
 
 import MuiAlert from '@mui/material/Alert';
 
@@ -11,7 +16,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
  
- 
+  const cookies = new Cookies();
 
 // const auth = new GoTrue({
 //     APIUrl: `${process.env.PUBLIC_URL}/.netlify/identity`,
@@ -37,11 +42,11 @@ const SignUp = () => {
       if (reason === 'clickaway') {
         return;
       }
-  
+      
       setOpen(false);
     };
 
-
+        
     const onTextFieldChange = (e) => {
         
         const value = e.target.value;
@@ -65,6 +70,8 @@ const SignUp = () => {
         setRole(e.target.value);
 
     }
+    
+
     const handleSignUp =  async (e) =>{
         e.preventDefault();
         
@@ -86,14 +93,38 @@ const SignUp = () => {
                 
                 // let data = {};
                 // console.log(data)
-                const response = auth.signup(email, password, user_metadata)
+                const response = auth.signup(email, password, user_metadata, role)
                 const data = await response
                 
                 
                 console.log((data))
                 if(data){
+                    const signUpResponse = axios.post("/.netlify/functions/signup/signup",{
+                        ...data.user_metadata,
+                        created_at: data.created_at,
+                        updated_at: data.updated_at,
+                        id: data.id,
+
+                        role: role,
+                        email: email
+                        
+                    })
+                    const signUpdata = await signUpResponse
+                    if(signUpdata?.data){
+                        console.log(signUpdata)
+                        const URL = '/.netlify/functions';
+                        const fullName = data.user_metadata.first_name + " " + data.user_metadata.last_name
+                
+                        const { data: { token, userId } } = await axios.post(`${URL}/addUser/addUser`, {
+                            username: data.user_metadata.first_name, fullName: fullName, phoneNumber:data.user_metadata.mobile, id: data.id,
+                        });
+                        
+
+                        
+                            handleClick()
+                    }
                     
-                    handleClick()
+                   
 
                 }
                 // .then(res => {
@@ -219,6 +250,9 @@ const SignUp = () => {
                                 <TextField variant = "outlined" color = "secondary" label = "Mentor Email"  name = "mentor_email" onChange = {onTextFieldChange} />
                             </Grid>
                             <Grid item key = "12" md = {6} sm = {6} xs = {12} style = {{ display: "flex", justifyContent: "center"}}>
+                                <TextField variant = "outlined" color = "secondary" label = "Roll No."  name = "roll_num" onChange = {onTextFieldChange} />
+                            </Grid>
+                            <Grid item key = "13" md = {6} sm = {6} xs = {12} style = {{ display: "flex", justifyContent: "center"}}>
                                 <Select
                                     value={role}
                                     label="Role"

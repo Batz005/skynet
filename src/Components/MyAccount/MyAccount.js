@@ -15,7 +15,7 @@ import { addProfilePic } from '../../app/user'
 
 function MyAccount() {
 
-    const { section, branch, semester,roll_num, first_name, last_name, father_name, mobile, date_of_birth, mentor_name, mentor_email, user_id } = useSelector((state)=>state.user.user_detail);
+    const { section, branch, semester,roll_num, first_name, last_name, father_name, mobile, date_of_birth, mentor_name, mentor_email, user_id } = useSelector((state)=>state.user);
     const { email } = useSelector((state)=>state.user);
     const dispatch = useDispatch();
     let [isInputDisabled,setIsInputDisabled] = useState(true);

@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import './RightSection.css'
 import { ViewState } from '@devexpress/dx-react-scheduler';
 
+
 import {
     Scheduler,
     Appointments,
@@ -14,51 +15,55 @@ import {Container} from '@mui/material'
 import appointments from '../../Components/Events/appointments';
 import { pageSelected } from '../../app/site';
 
-//FUNCTION FOR CALENDER
-const Calender = (props) => {
-    const [ data, setData] = useState(appointments)
+
+// //FUNCTION FOR CALENDER
+// const Calender = (props) => {
+//     const [ data, setData] = useState(appointments)
     
 
-    return (
+//     return (
         
-          <Scheduler
-            data = {data}
-            height= {"80rem"}
-            maxWidth = {200}
-          >
-            <ViewState
-              defaultCurrentViewName="Day"
-            />
+//           <Scheduler
+//             data = {data}
+//             height= {"80rem"}
+//             maxWidth = {200}
+//           >
+//             <ViewState
+//               defaultCurrentViewName="Day"
+//             />
   
-            <DayView
-              startDayHour={9.5}
-              endDayHour={17}
-            />
+//             <DayView
+//               startDayHour={9.5}
+//               endDayHour={17}
+//             />
             
            
-            <Appointments />
-            <AppointmentTooltip
-            showCloseButton
-            showOpenButton
-          />
+//             <Appointments />
+//             <AppointmentTooltip
+//             showCloseButton
+//             showOpenButton
+//           />
           
-            <AllDayPanel />
+//             <AllDayPanel />
             
-          </Scheduler>
+//           </Scheduler>
         
-      );
-}
+//       );
+// }
 
 
 
 function RightSection() {
     const active__page = useSelector(state => state.site.active__page);
     return (
-        (active__page==='HOME__ACTIVE')?
-        <Container className = 'rightsection' maxWidth= "sm" disableGutters = {true}>
-               <Calender className = "rightsection__calender"/>
-        </Container>
-        :<div className = "rightsection__empty"></div>
+        // (active__page==='HOME__ACTIVE')?
+        // <Container className = 'rightsection' maxWidth= "sm" disableGutters = {true}>
+        //        <Calender className = "rightsection__calender"/>
+        // </Container>
+        // :
+        <div className = "rightsection__empty">
+          
+        </div>
         
     )
 }

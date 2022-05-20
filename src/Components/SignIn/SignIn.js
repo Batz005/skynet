@@ -7,7 +7,7 @@ import particlesOptions from "./particles.json"
 import './Untitled-2.png'
 import './SignIn.css';
 
-console.log(particlesOptions)
+
 
 
 

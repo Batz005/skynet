@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StreamChat } from 'stream-chat';
-import { Chat } from 'stream-chat-react';
+import { Chat, Channel, ChannelHeader, MessageInput, MessageList, Thread, Window } from 'stream-chat-react';
 import Cookies from 'universal-cookie';
 
 import { ChannelListContainer, ChannelContainer, Auth } from './messengerUtils';
 
 import 'stream-chat-react/dist/css/index.css';
-import './App.css';
-
+import './Messenger.css';
+import { useSelector } from 'react-redux';
 const cookies = new Cookies();
 
-const apiKey = 'gf9sh7cj96nk';
+const apiKey ='gf9sh7cj96nk';
 const authToken = cookies.get("token");
 
 const client = StreamChat.getInstance(apiKey);
@@ -32,7 +32,7 @@ const Messenger = () => {
     const [isCreating, setIsCreating] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
 
-    if(!authToken) return <Auth />
+    
 
     return (
         <div className="app__wrapper">
@@ -53,6 +53,48 @@ const Messenger = () => {
             </Chat>
         </div>
     );
+
+    // const [client, setClient] = useState(null)
+    // const [channel, setChannel] = useState(null)
+    // // const user = useSelector(state=>state.user)
+    // useEffect(()=>{
+    //     async function init() {
+    //         const chatClient = StreamChat.getInstance(apiKey)
+
+    //         await chatClient.connectUser({
+    //                     id: "bharath",
+    //                     name: "bharath",
+    //                     fullName: "bharath kkkk",
+    //                     phoneNumber: "9550205315",
+    //                 }, chatClient.devToken("bharath"))
+
+    //         const channel = chatClient.channel("team", "cbit-channel", {
+    //             name: "Talk about cbit",
+    //             members: ["bharath"]
+    //         })
+
+    //         await channel.watch()
+
+    //         setChannel(channel)
+    //         setClient(chatClient)
+    //     }
+
+    //     init()
+    //     if (client) return () => client.disconnectUser()
+    // }, [])
+
+    // return (
+    //     <Chat client={client} theme='messaging light'>
+    //         <Channel channel={channel}>
+    //         <Window>
+    //             <ChannelHeader />
+    //             <MessageList />
+    //             <MessageInput />
+    //         </Window>
+    //         <Thread />
+    //         </Channel>
+    //     </Chat>
+    // )
 }
 
 export default Messenger;

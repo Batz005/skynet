@@ -11,23 +11,27 @@ import getVideoId from '../utils/getVideoId';
 import './ResourceSection.css';
 import axios from 'axios';
 import { useAuthQuery } from '@nhost/react-apollo';
-import { useMutation, gql  } from '@apollo/client';
+import { useMutation, gql, useQuery  } from '@apollo/client';
 import { useSelector } from 'react-redux';
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 
+import { Carousel } from 'react-responsive-carousel';
+
+
+import ReactPlayer from 'react-player/youtube'
 
   
 const GET_RESOURCE_DATA = gql`
 query GetResourceData($resource_id: uuid!) {
-    Resources_by_pk(resource_id: $resource_id) {
-      resource_id
+    Resources_by_pk(id: $resource_id) {
+      id
       Lectures {
-        lecture_id
+        id
         title
-        published_date
         video_id
       }
       References {
-        reference_id
+        id
         url
           }
     }
@@ -38,7 +42,7 @@ query GetResourceData($resource_id: uuid!) {
 const INSERT_REFERENCE = gql`
 mutation MyMutation($added_by: uuid!, $resource_id: uuid!, $url:String) {
     insert_References_one(object: {added_by: $added_by, resource_id: $resource_id, url: $url}){
-      reference_id
+      id
       url
     }
   }
@@ -48,7 +52,7 @@ mutation MyMutation($added_by: uuid!, $resource_id: uuid!, $url:String) {
 const INSERT_LECTURE = gql`
 mutation MyMutation($added_by: uuid!, $resource_id: uuid!, $video_id:String, $title: String) {
     insert_Lectures_one(object: {added_by: $added_by, resource_id: $resource_id, video_id: $video_id, title: $title}){
-      lecture_id
+      id
 
       video_id
     }
@@ -56,7 +60,9 @@ mutation MyMutation($added_by: uuid!, $resource_id: uuid!, $video_id:String, $ti
 
 `
   
-
+const YoutubeSlide = ({ url, isSelected }) => (
+    <ReactPlayer width="100%" url={url} playing={isSelected} controls = {true} light = {true} pip = {true}/>
+  );
 
 
 function ResourceSection() {
@@ -70,9 +76,9 @@ function ResourceSection() {
     let [isRefEditEnabled, setIsRefEditEnabled] = useState(false);
     let [resourceData, setResourceData] = useState({})
     let [url, setUrl] = useState("")
-    const userId = useSelector((state)=>state.user.user_detail.user_id);
+    const userId = useSelector((state)=>state.user.id);
 
-    const queryResults = useAuthQuery(GET_RESOURCE_DATA, {
+    const queryResults = useQuery(GET_RESOURCE_DATA, {
         variables: {
             resource_id: resourceId
         }
@@ -142,6 +148,8 @@ function ResourceSection() {
         return videoData.data
       };
 
+     
+
     const handleLectureUrlSubmit = async (e) => {
         e.preventDefault();
         const videoId = getVideoId(lectureInput)
@@ -156,23 +164,42 @@ function ResourceSection() {
                  
             }
         })
-        resourceData.Lectures.push(new_lecture)
+        resourceData.Lectures.push({
+            added_by: userId,
+                 resource_id: resourceId,
+                 title: data.title,
+                 video_id: videoId
+        })
         handleCloseLectureModal()
     }
+
+    const customRenderItem = (item, props) => <item.type {...item.props} {...props} />;
+
+    const getVideoThumb = (video_id) => `https://img.youtube.com/vi/${video_id}/default.jpg`;
+  
+    // const getVideoId = (url) => url.substr('https://www.youtube.com/embed/'.length, url.length);
+  
+    const customRenderThumb = (children) =>
+        children.map((item, i) => {
+            const video_id = getVideoId(item.props.url);
+            return <img key = {i} src={getVideoThumb(video_id)} />;
+        });
 
     const handleReferenceUrlSubmit = async (e) => {
         e.preventDefault();
         
-        const new_reference = await insertReference({
+        const response = await insertReference({
             variables: {
                  added_by: userId,
                  resource_id: resourceId,
                  url: referenceInput
             }
         })
+        const new_reference = await response
         console.log(queryResults.data.Resources_by_pk.References)
         console.log(resourceData)
-        resourceData.References.push(new_reference)
+        console.log(new_reference)
+        resourceData.References.push(new_reference.data.insert_References_one)
         console.log(queryResults)
         handleCloseReferenceModal();
     }
@@ -210,7 +237,28 @@ function ResourceSection() {
                         </IconButton>
                         <hr className ="style__one" />
                         
-                        <Lectures resourceId = {resourceId}/>
+                        {/* <Lectures resourceId = {resourceId} lectures = {resourceData.lectures}/> */}
+                        <Carousel renderItem={customRenderItem} renderThumbs={customRenderThumb}>
+                            {
+                                resourceData?.Lectures?.map((lecture, i) => (
+
+                                    <YoutubeSlide key={`youtube-${i}`} url={`https://www.youtube.com/embed/${lecture.video_id}`}  />
+                                        // <iframe 
+                                        //   width="560" 
+                                        //   height="315" 
+                                        //   src="https://www.youtube.com/embed/{lectureLink}" 
+                                        //   title="YouTube video player" 
+                                        //   frameborder="0" 
+                                        //   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                        //   allowfullscreen="allowfullscreen">
+
+                                        // </iframe>
+                                ))
+                            }
+                
+          
+          
+                        </Carousel>
                         
                     </div>
                     <Modal
