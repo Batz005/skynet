@@ -1,6 +1,6 @@
 {
     "HOME__ACTIVE": [
-        "Feed","Profile", "Groups", "Faculty", "CBITinfo"],
+        "Feed", "CBITinfo"],
     "FRIENDS__ACTIVE": ["Friends", "Members", "Groups", "Interests"],
     "CLUBS__ACTIVE": ["Clubs"],
     "CLUB__INFO__ACTIVE": ["Introduction", "Achievements", "Hall of Fame", "Gallery","Join"],
