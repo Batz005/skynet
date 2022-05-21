@@ -12,9 +12,10 @@ import MiddleSection from '../Containers/MiddleSection/MiddleSection';
 import RightSection from '../Containers/RightSection/RightSection';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 // import LinearIndeterminate from '../utils/LinearIndertiminate';
-import {  Fab, Modal, Box } from '@mui/material';
+import {  Fab, Modal, Box, SpeedDial, SpeedDialAction, SpeedDialIcon, Backdrop } from '@mui/material';
 import SignUp from '../Components/SignUp/SignUp';
-
+import SmartToyIcon from '@mui/icons-material/SmartToy';
+import ChatBox from '../Components/ChatBox/ChatBox';
 import {
   ApolloClient,
   InMemoryCache,
@@ -58,7 +59,12 @@ const customTheme = createTheme(({
 
 const theme = createTheme()
 
-
+const actions = [
+  { icon: <SmartToyIcon />, name: 'Bot' },
+  { icon: <ChatIcon />, name: 'Chat' },
+  
+  
+];
 
 const App = () => {
   
@@ -80,16 +86,26 @@ const App = () => {
     }),
   });
   const [ isChatClicked, setIsChatClicked ] = useState(false)
-  let [open, setOpen] = useState(false);
-
+  let [open, setOpen] = useState(false)
+  let [openChat, setOpenChat] = useState(false);
+  let [openBot, setOpenBot] = useState(false);
   const handleChatClicked = (e) =>{
     setIsChatClicked(false)
   }
-  const handleOpenModal = () => {   
-    setOpen(true) 
+  const handleOpenChatModal = () => {   
+    setOpenChat(true) 
+    handleClose()
 }
 
+const handleOpenBotModal = () => {   
+  setOpenBot(true) 
+  handleClose()
+}
+
+const handleCloseChat = () => setOpenChat(false);
+const handleCloseBot = () => setOpenBot(false);
 const handleClose = () => setOpen(false);
+const handleOpen = () => setOpen(true);
 
 const modalStyle = {
   position: 'absolute',
@@ -106,10 +122,25 @@ const modalStyle = {
   flexDirection: "row"
 }
 
+const modalBotStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: '55%',
+  height: '80%',
+  bgcolor: 'background.paper',
+  borderRadius: "10px",
+  boxShadow: 24,
+  p: 4,
+  display: "flex",
+  flexDirection: "row"
+}
+
 
   return (
     <ApolloProvider client = {apolloClient}>
-      <ThemeProvider theme = {customTheme}>
+      <ThemeProvider theme = {theme}>
         <div className="app">
         {/* {isLoading && <LinearIndeterminate /> } */}
         <Router>
@@ -118,8 +149,8 @@ const modalStyle = {
           :(
           <>  
             <Modal
-                          open = {open}
-                          onClose={handleClose}
+                          open = {openChat}
+                          onClose={handleCloseChat}
 
                           aria-labelledby="modal-modal-title"
                           aria-describedby="modal-modal-description"
@@ -130,13 +161,54 @@ const modalStyle = {
                           </Box>
                           
               </Modal>
+              <Modal
+                          open = {openBot}
+                          onClose={handleCloseBot}
+
+                          aria-labelledby="modal-modal-title"
+                          aria-describedby="modal-modal-description"
+                          >
+                          <Box sx = {modalBotStyle} >
+                              <ChatBox />
+                              
+                          </Box>
+                          
+              </Modal>
               <Header />
               <div className = "app__body">
                 <SideBar />
-                <Fab color = "secondary" aria-label="chat" onClick={handleOpenModal}>
+                {/* <Fab color = "secondary" aria-label="chat" onClick={handleOpenChatModal}>
                   <ChatIcon />
-                </Fab>
+                </Fab> */}
+                
                 <MiddleSection />
+                
+                  <SpeedDial
+                    ariaLabel="SpeedDial tooltip example"
+                    sx={{ position: 'fixed', bottom: "2em", right: "2em" }}
+                    icon={<SpeedDialIcon />}
+                    onClose={handleClose}
+                    onOpen={handleOpen}
+                    open={open}
+                  >
+                    
+                      <SpeedDialAction
+                        key="bot"
+                        icon={<SmartToyIcon />}
+                        tooltipTitle="Bot"
+                        tooltipOpen
+                        onClick={handleOpenBotModal}
+                      />
+                      <SpeedDialAction
+                        key="chat"
+                        icon={<ChatIcon />}
+                        tooltipTitle="Chat"
+                        tooltipOpen
+                        onClick={handleOpenChatModal}
+                      />
+                    
+                  </SpeedDial>
+                
                 <RightSection />
                
               </div>

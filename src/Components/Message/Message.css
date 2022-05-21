@@ -1,0 +1,37 @@
+.message {
+    width: fit-content;
+    margin: 1em;
+    padding: 0 0.2em !important;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.message__user {
+    margin-left: auto;
+    color: white;
+    text-align: left !important;
+}
+
+.message__avatar {
+    margin: 5px;
+}
+.message__user > .message__avatar {
+    background-color: purple;
+    
+}
+
+.message__userCard {
+    background-color: #0b81ff !important;
+    color: white; 
+    border-radius: 15px !important;
+}
+
+.message__botCard {
+    background-color: #e9e9eb !important;
+    border-radius: 15px !important;
+}
+
+.message__userCard > .MuiCardContent-root > .MuiTypography-root {
+    color: white;
+}
