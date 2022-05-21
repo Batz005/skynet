@@ -15,24 +15,26 @@ const authToken = cookies.get("token");
 
 const client = StreamChat.getInstance(apiKey);
 
-if(authToken) {
-    client.connectUser({
-        id: cookies.get('userId'),
-        name: cookies.get('username'),
-        fullName: cookies.get('fullName'),
-        image: cookies.get('avatarURL'),
-        hashedPassword: cookies.get('hashedPassword'),
-        phoneNumber: cookies.get('phoneNumber'),
-    }, authToken)
-}
+
 
 
 const Messenger = () => {
     const [createType, setCreateType] = useState('');
     const [isCreating, setIsCreating] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-
+    const id = useSelector(state=>state.user.id)
+   
+        client.connectUser({
+            id: id,
+            name: cookies.get('username'),
+            fullName: cookies.get('fullName'),
+            image: cookies.get('avatarURL'),
+            hashedPassword: cookies.get('hashedPassword'),
+            phoneNumber: cookies.get('phoneNumber'),
+        }, client.devToken(id))
     
+   
+
 
     return (
         <div className="app__wrapper">

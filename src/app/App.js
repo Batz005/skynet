@@ -169,7 +169,7 @@ const modalBotStyle = {
                           aria-describedby="modal-modal-description"
                           >
                           <Box sx = {modalBotStyle} >
-                              <ChatBox />
+                              <ChatBox style = {{width: "100%"}}/>
                               
                           </Box>
                           

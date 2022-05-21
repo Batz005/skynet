@@ -90,13 +90,15 @@ function SignInForm() {
                 const URL = '/.netlify/functions';
                         const fullName = data.user_metadata.first_name + " " + data.user_metadata.last_name
                 
-                        const {  token, userId  } = await axios.post(`${URL}/loginUser/loginUser`, {
+                        const userData = await axios.post(`${URL}/loginUser/loginUser`, {
                             username: data.user_metadata.first_name, fullName: fullName, phoneNumber:data.user_metadata.mobile, id: data.id
                         });
+                        console.log(userData)
+                        const { token, userId} = userData.data
                         cookies.set('token', token);
                         cookies.set('username', data.user_metadata.first_name);
                         cookies.set('fullName', fullName);
-                        cookies.set('userId', userId);
+                        cookies.set('user_id', userId);
 
                         
             dispatch(addUserData({...data.user_metadata, id: data.id, email: data.email, role: loginData.data.role, token: loginData.data.token}))
