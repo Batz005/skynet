@@ -1,5 +1,5 @@
 :root {
-    --primary-color: #005fff;
+    --primary-color: #011627;
     --primary-color-alpha: #005fff1a;
   }
   
@@ -89,7 +89,7 @@
   }
   
   .auth__form-container_fields-content_input input:hover {
-    border-color: #dcdddd;
+    border-color: #38F495;
   }
   
   .auth__form-container_fields-content_input input:focus,
@@ -288,6 +288,7 @@
   
   .channel__container {
     height: 100pv;
+    background-color: white;
     width: 100% !important;
   }
 
@@ -362,6 +363,7 @@
     display: flex;
     /* height: 800px; */
     height: 100% !important;
+    background-color: #011627;
     box-shadow: inset 1px 0px 0px rgba(0, 0, 0, 0.1);
   }
   
@@ -704,7 +706,7 @@
   }
   
   .user-item__wrapper:hover {
-    background: #f7f6f8;
+    background: #38F495;
     cursor: pointer;
   }
   
@@ -1037,7 +1039,7 @@
   }
   
   .str-chat__message-team:hover {
-    background: #e9e9ea;
+    background: #38f496b1;
   }
   
   .str-chat__message-team-group {

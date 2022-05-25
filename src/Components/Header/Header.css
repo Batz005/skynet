@@ -107,6 +107,7 @@
 
 .header__right {
     display: flex;
+    margin-right: 0.5em;
 }
 
 .header__buttons > .MuiIconButton-root ,

@@ -10,15 +10,18 @@ import './Post.css'
 
 function Post({ postDetails }) {
 
-    
+    const date = new Date(postDetails.date_created)
+    const formatted_date = date.getDate()+ "-" + date.getMonth() + "-" + date.getFullYear() + " " + date.getHours() + ":" +  date.getMinutes() + ":" + date.getSeconds()
     
     return (
         <Container className = "post">
             <div className = "post__top">
-                <Avatar src = {postDetails.profile_pic} className = "post__avatar"/>
+                <Avatar className = "post__avatar">
+                {postDetails.profile_pic ? postDetails.profile_pic : postDetails.username[0]} 
+                </Avatar>
                 <div className = "post__topInfo">
-                    <h3>{postDetails.author}</h3>
-    <p>{postDetails.date_created}</p>
+                    <h3>{postDetails.username}</h3>
+    <p>{formatted_date}</p>
                 </div>
             </div>
             <div className = "post__bottom">

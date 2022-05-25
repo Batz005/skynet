@@ -16,6 +16,8 @@ import {  Fab, Modal, Box, SpeedDial, SpeedDialAction, SpeedDialIcon, Backdrop }
 import SignUp from '../Components/SignUp/SignUp';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
 import ChatBox from '../Components/ChatBox/ChatBox';
+import ForumIcon from '@mui/icons-material/Forum';
+import { Close } from '@mui/icons-material';
 import {
   ApolloClient,
   InMemoryCache,
@@ -151,27 +153,27 @@ const modalBotStyle = {
             <Modal
                           open = {openChat}
                           onClose={handleCloseChat}
-
+                          sx = {{ width: "50%", boxShadow: "5"}}
                           aria-labelledby="modal-modal-title"
                           aria-describedby="modal-modal-description"
                           >
-                          <Box sx = {modalStyle} >
+                          
                               <Messenger />
                               
-                          </Box>
+                          
                           
               </Modal>
               <Modal
                           open = {openBot}
                           onClose={handleCloseBot}
-
+                          sx = {{ width: "50%"}}
                           aria-labelledby="modal-modal-title"
                           aria-describedby="modal-modal-description"
                           >
-                          <Box sx = {modalBotStyle} >
-                              <ChatBox style = {{width: "100%"}}/>
+                         
+                              <ChatBox style = {{width: "30%"}}/>
                               
-                          </Box>
+                          
                           
               </Modal>
               <Header />
@@ -186,9 +188,10 @@ const modalBotStyle = {
                   <SpeedDial
                     ariaLabel="SpeedDial tooltip example"
                     sx={{ position: 'fixed', bottom: "2em", right: "2em" }}
-                    icon={<SpeedDialIcon />}
+                    icon={<SpeedDialIcon icon = {<ChatIcon />} openIcon = {<Close />}/>}
                     onClose={handleClose}
                     onOpen={handleOpen}
+                    variant = "secondary"
                     open={open}
                   >
                     
@@ -201,7 +204,7 @@ const modalBotStyle = {
                       />
                       <SpeedDialAction
                         key="chat"
-                        icon={<ChatIcon />}
+                        icon={<ForumIcon />}
                         tooltipTitle="Chat"
                         tooltipOpen
                         onClick={handleOpenChatModal}

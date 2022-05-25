@@ -19,7 +19,8 @@ import './PostSender.css';
 function PostSender() {
     const [input, setInput] = useState('');
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const { username, uid, profile_pic } = useSelector((state)=> state.user);
+    const { first_name, id, profile_pic } = useSelector((state)=> state.user);
+
     const dispatch = useDispatch();
 
 
@@ -32,7 +33,7 @@ function PostSender() {
     };
 
     const open = Boolean(anchorEl);
-    const id = open ? 'simple-popover' : undefined;
+    const pid = open ? 'simple-popover' : undefined;
 
     const handleImageVideoClicked = (e)=>{
 
@@ -49,18 +50,18 @@ function PostSender() {
         // const dateTime = date+'@'+time;
         // const d = new Date();
         // console.log(d.getUTCDate());
-        axios.post('/api/newPost',{
-            post_id: uuidv4(),
+        axios.post('/.netlify/functions/newPost/newPost',{
             body: input,
-            user_id: uid,
-            author: username,
-            profile_pic: "jflksjfl",
+            user_id: id,
+            
+            username: first_name,
             image: null,
             poll: null
         }).then(response=>{
-            dispatch(addNewPost(
-                response.data[0]
-            ))
+            if(response?.data?.Posts)
+                dispatch(addNewPost(
+                    response.data.Posts[0]
+                ))
         })
         
         setInput("");
@@ -93,14 +94,14 @@ function PostSender() {
                 
                 <IconButton
                     className = 'postsender__option'
-                    aria-describedby={id}
+                    
                     onClick = {handleClick}
                     size="large">
                     <EmojiEmotionsIcon fontSize = "large" style = {{ color: "#fcc83f"}}/>
                     <h4>Emojis</h4>
                 </IconButton>
                 <Popover 
-                    id={id}
+                    id={pid}
                     open={open}
                     anchorEl={anchorEl}
                     onClose={handleClose}

@@ -90,7 +90,7 @@ function ChatBox() {
         <div className = "chatbox">
             <div className = "chatbox__hero">
                 <img src = {Logo} alt = "logo" className = "chatbox__logo" onClick = {()=>{setLogoPressed(!logoPressed)}}/>
-                <h1><strong>ChatBot</strong></h1>
+                <h1><strong>Skynet</strong></h1>
             </div>
             <div className = "chatbox__messages">
                 <FlipMove >
