@@ -17,7 +17,7 @@ import SignUp from '../Components/SignUp/SignUp';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
 import ChatBox from '../Components/ChatBox/ChatBox';
 import ForumIcon from '@mui/icons-material/Forum';
-import { Close } from '@mui/icons-material';
+import { Close, Translate } from '@mui/icons-material';
 import {
   ApolloClient,
   InMemoryCache,
@@ -116,7 +116,7 @@ const modalStyle = {
   transform: 'translate(-50%, -50%)',
   width: '80%',
   height: '80%',
-  bgcolor: 'background.paper',
+  bgColor: "transparent",
   borderRadius: "10px",
   boxShadow: 24,
   p: 4,
@@ -131,10 +131,10 @@ const modalBotStyle = {
   transform: 'translate(-50%, -50%)',
   width: '55%',
   height: '80%',
-  bgcolor: 'background.paper',
+  p: 4,
   borderRadius: "10px",
   boxShadow: 24,
-  p: 4,
+ 
   display: "flex",
   flexDirection: "row"
 }
@@ -153,7 +153,16 @@ const modalBotStyle = {
             <Modal
                           open = {openChat}
                           onClose={handleCloseChat}
-                          sx = {{ width: "50%", boxShadow: "5"}}
+                          sx = {{
+                            width: "80%", 
+                            height: "80%",
+                            position: "fixed",
+                            
+                            
+                            m: "auto auto"
+                            
+
+                        }}
                           aria-labelledby="modal-modal-title"
                           aria-describedby="modal-modal-description"
                           >
@@ -166,7 +175,13 @@ const modalBotStyle = {
               <Modal
                           open = {openBot}
                           onClose={handleCloseBot}
-                          sx = {{ width: "50%"}}
+                          sx = {{
+                            width: "50%", 
+                            height: "80%",
+                            position: 'fixed',
+                            m: "auto auto"
+                            
+                        }}
                           aria-labelledby="modal-modal-title"
                           aria-describedby="modal-modal-description"
                           >

@@ -359,7 +359,7 @@ function ResourceSection() {
                                         </Box>
                                         
                                         ):
-                                        <a href={reference.url} style = {{ font: "sans-serif 10px", color: "blue"}}target="_blank" rel="noopener noreferrer" >{reference.url}</a>
+                                        <a href={reference.url} style = {{ font: "sans-serif 10px", color: "blue", overflow: "hidden"}}target="_blank" rel="noopener noreferrer" >{reference.url}</a>
                                     }
                                     
                                 </ListItem>)

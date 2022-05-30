@@ -1,5 +1,5 @@
 const fetch = require('node-fetch')
-const jwt = require('jsonwebtoken')
+// const jwt = require('jsonwebtoken')
 
 
 
@@ -12,20 +12,20 @@ const handler = async (event, context) => {
   let Token = ""
   async function fetchGraphQL(operationsDoc, operationName, variables) {
 
-    console.log(bodyData)
-    Token = jwt.sign(
-      {
+    // console.log(bodyData)
+    // Token = jwt.sign(
+    //   {
        
-        iat: Math.floor(Date.now() / 1000),
-        exp: Math.floor(Date.now() / 1000 + 7 * 24 * 60 * 60),
-        "https://hasura.io/jwt/claims": {
-          "x-hasura-allowed-roles": ["user", "admin"],
-          "x-hasura-default-role": "user",
-          "x-hasura-user-id": `${id}`,
-        },
-      },
-      process.env.JWT_SECRET
-    );
+    //     iat: Math.floor(Date.now() / 1000),
+    //     exp: Math.floor(Date.now() / 1000 + 7 * 24 * 60 * 60),
+    //     "https://hasura.io/jwt/claims": {
+    //       "x-hasura-allowed-roles": ["user", "admin"],
+    //       "x-hasura-default-role": "user",
+    //       "x-hasura-user-id": `${id}`,
+    //     },
+    //   },
+    //   process.env.JWT_SECRET
+    // );
 
     const result = await fetch(
       process.env.HASURA_URL,
@@ -48,7 +48,7 @@ const handler = async (event, context) => {
   
 
   const operationsDoc = `
-  query MyQuery {
+  query MyQuery($user_id: uuid!) {
     Posts {
       id
       body
@@ -59,19 +59,26 @@ const handler = async (event, context) => {
       likes
       dislikes
     }
+
+    Post_Stats(where: {user_id: {_eq: $user_id}}){
+      id
+      post_id
+      is_liked
+      is_disliked
+    }
   }
 `;
 
-function fetchMyQuery() {
+function fetchMyQuery(id) {
   return fetchGraphQL(
     operationsDoc,
     "MyQuery",
-    {}
+    {"user_id":id}
   );
 }
 
 
-  const { errors, data } = await fetchMyQuery();
+  const { errors, data } = await fetchMyQuery(id);
 
   if (errors) {
     // handle those errors like a pro

@@ -125,14 +125,15 @@ function PostSender() {
                         onSelect = {handleEmojiSelected}
                     />
                 </Popover>
-                <IconButton className = 'postsender__option' size="large">
+                {/* <IconButton className = 'postsender__option' size="large">
                     <PollIcon fontSize="large" color = "secondary"/>
                     <h4>Polls</h4>
-                </IconButton>
-                <IconButton className = 'postsender__option' size="large">
+                </IconButton> */}
+                <Button className = 'postsender__option' size="large">
                     <PhotoLibraryIcon style = {{ color: "#002984"}} fontSize = "large"/>
-                    <h4>Photo/Video</h4>
-                </IconButton>
+                    <input type = "file" hidden />
+                    <h4>Photo</h4>
+                </Button>
             </div>
                 
             

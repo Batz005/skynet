@@ -2,20 +2,35 @@
 .resource__title {
 
 
-background-color: #eff2f5;
+background-color: #011627;
+border-radius: 4px;
 padding: 5px 2px;
 margin: 2.5px 10px;
-    
+color: #eff2f5;
 width: 100%; 
 
 
 }
 
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: red;
+    opacity: 1; /* Firefox */
+  }
+  
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+color: red;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+color: red;
+}
+
 .resource__imgUrl {
-    background-color: #eff2f5;
+    background-color: #011627;
+    border-radius: 4px;
     padding: 5px 2px;
     margin: 2.5px 10px;
-        
+    color: #eff2f5;
     width: 100%; 
     
 
@@ -24,10 +39,11 @@ width: 100%;
 .resource__description {
     outline-width: 0;
     border: none;
-    background-color: #eff2f5;
+    background-color: #011627;
+    border-radius: 4px;
     padding: 5px 2px;
     margin: 2.5px 10px;
-        
+    color: #eff2f5;
     width: 100%; 
     height: 100%;
 }

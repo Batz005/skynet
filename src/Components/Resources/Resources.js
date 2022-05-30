@@ -200,12 +200,13 @@ console.log(resourcesList)
                                     defaultValue = ""
                                     onChange = {(e)=> setTitle(e.target.value)}
                                     placeholder = "Title of the Resource" 
+                                    style = {{ fontColor: "black"}}
                                         />
                                   </div>
                                   <div className = "resource__add__items">
                                     <input 
                                       type = 'text' 
-                                      className='resource__imgurl'
+                                      className='resource__imgUrl'
                                       defaultValue = ""
                                       onChange = {(e)=> setImgUrl(e.target.value)}
                                       placeholder = "ImageUrl (optional)" 
@@ -245,7 +246,7 @@ console.log(resourcesList)
                                 // 16:9
                                 pt: '56.25%',
                               }}
-                              image={resource.img_url || `https://source.unsplash.com/random/?${resource.title}/${i}`}
+                              image={resource.img_url || `https://source.unsplash.com/random/?${resource.title}/1`}
                               title="Image title"
                           />
                           <CardContent sx={{ flexGrow: 1 }}>

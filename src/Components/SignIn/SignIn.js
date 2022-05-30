@@ -4,7 +4,7 @@ import { loadFull } from "tsparticles";
 import SignInForm from './SignInForm';
 
 import particlesOptions from "./particles.json"
-import './Untitled-2.png'
+// import './Untitled-2.png'
 import './SignIn.css';
 
 

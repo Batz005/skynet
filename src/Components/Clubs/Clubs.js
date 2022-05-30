@@ -98,35 +98,26 @@ const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 const clubsList = [
     {
-        title: 'Name of the Club',
-        image: 'https://source.unsplash.com/random/?college/1',
-        imgText: 'main image description',
+        title: 'CyberSecurity Club',
+        image: 'https://source.unsplash.com/random/?cybersecurity',
+        imgText: 'CyberSecurity',
     },
     {
-        title: 'Name of the Club',
-        image: 'https://source.unsplash.com/random/?college/2',
-        imgText: 'main image description',
+        title: 'Photography Club',
+        image: 'https://source.unsplash.com/random/?Photography',
+        imgText: 'Photography',
     },
     {
-        title: 'Name of the Club',
-        image: 'https://source.unsplash.com/random/?college/3',
-        imgText: 'main image description',
+        title: 'CBIT Open Source Community',
+        image: 'https://source.unsplash.com/random/?Open%20Source',
+        imgText: 'CBIT Open Source Community',
     },
     {
-        title: 'Name of the Club',
-        image: 'https://source.unsplash.com/random/?college/4',
-        imgText: 'main image description',
+        title: 'BasketBall Club',
+        image: 'https://source.unsplash.com/random/?BasketBall',
+        imgText: 'BasketBall Club',
     },
-    {
-        title: 'Name of the Club',
-        image: 'https://source.unsplash.com/random/?college/5',
-        imgText: 'main image description',
-    },
-    {
-        title: 'Name of the Club',
-        image: 'https://source.unsplash.com/random/?college/6',
-        imgText: 'main image description',
-    },
+    
 ]
 
 export default function Clubs() {

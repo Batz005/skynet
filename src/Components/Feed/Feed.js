@@ -71,6 +71,7 @@ function Feed() {
     // const dispatch = useDispatch()
     // console.log(postsList);
     const [posts, setPosts] = useState([])
+    const [postStats, setPostStats] = useState([])
     const [input, setInput] = useState('');
     const [anchorEl, setAnchorEl] = React.useState(null);
     const { first_name, id, profile_pic } = useSelector((state)=> state.user);
@@ -114,6 +115,8 @@ function Feed() {
         }).then(response=>{
             console.log(response)
             if(response?.data?.insert_Posts_one)
+            response.data.insert_Posts_one["is_liked"] = false
+            response.data.insert_Posts_one["is_disliked"] = false
                 setPosts([
                     ...posts,
                     response.data.insert_Posts_one
@@ -143,9 +146,20 @@ function Feed() {
     useEffect(() => {
         axios.post('/.netlify/functions/getPosts/getPosts', { id: id}).then(response=>{
             console.log(response)
-            if(response?.data?.Posts)
+            setPostStats(response.data.Post_Stats)
+            console.log(response.data.Post_Stats)
+            if(response.data){
+                response.data.Posts.sort((a,b)=>new Date(a.date_created) - new Date(b.date_created))
                 setPosts(response.data.Posts)
                 
+            }
+            if(response?.data?.Post_Stats){
+                // response.data.Post_Stats.filter
+                setPostStats(response.data.Post_Stats)
+                console.log(response.data.Post_Stats)
+            }   
+                
+            console.log(posts, postStats)    
         })
     },[])
 
@@ -179,7 +193,7 @@ function Feed() {
               </Paper>
             </Container>
             
-            <div className = "postsender">
+            <Container className = "postsender">
                 <div className = "postsender__top">
                     
                     <form>
@@ -229,27 +243,41 @@ function Feed() {
                             onSelect = {handleEmojiSelected}
                         />
                     </Popover>
-                    <IconButton className = 'postsender__option' size="large">
+                    {/* <IconButton className = 'postsender__option' size="large">
                         <PollIcon fontSize="large" color = "secondary"/>
                         <h4>Polls</h4>
-                    </IconButton>
-                    <IconButton className = 'postsender__option' size="large">
-                        <PhotoLibraryIcon style = {{ color: "#002984"}} fontSize = "large"/>
-                        <h4>Photo/Video</h4>
-                    </IconButton>
+                    </IconButton> */}
+                    <input accept="image/*" id="icon-button-file"
+                        type="file" style={{ display: 'none' }} />
+                        <label htmlFor='icon-button-file'>
+                            <IconButton className = 'postsender__option' size="large">
+                                <PhotoLibraryIcon style = {{ color: "#002984"}} fontSize = "large"/>
+                                
+                                
+                                <h4>Photo</h4>
+                            </IconButton>
+                        </label>
+                   
                 </div>
                 
             
-            </div>
+            </Container>
 
 
 
 
             {   
-            
-                posts.slice(0).reverse().map((post,i)=>{
-                   
-                    return <Post key = {i} postDetails = {post} />
+                // posts.sort((a,b)=>a.getTime()-b.getTime())
+                posts.reverse().map((post,i)=>{
+                   const stats = postStats.filter((stat, i)=>{
+                       
+                           return stat.post_id === post.id
+                       
+                   })
+                   console.log(stats, postStats)
+                   post['is_liked'] = stats[0]?.is_liked ?? false
+                   post['is_disliked'] = stats[0]?.is_disliked ?? false
+                        return <Post key = {i} postDetails = {post} stats = {stats}/>
                 })
             }
         </>
