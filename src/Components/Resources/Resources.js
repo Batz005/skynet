@@ -246,7 +246,7 @@ console.log(resourcesList)
                                 // 16:9
                                 pt: '56.25%',
                               }}
-                              image={resource.img_url || `https://source.unsplash.com/random/?${resource.title}/1`}
+                              image={resource.img_url || `https://source.unsplash.com/random/?${resource.title}`}
                               title="Image title"
                           />
                           <CardContent sx={{ flexGrow: 1 }}>
