@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import makeStyles from '@mui/styles/makeStyles';
 import withStyles from '@mui/styles/withStyles';
-
+import AlertDialog from '../utils/AlertDialog'
 import {
     Link as MaterialLink,
     Button,
@@ -20,23 +20,18 @@ import {
     Grid,
     Typography,
     Container,
+    Box,
+    TextField,
+    Modal
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
+import AddIcon from '@mui/icons-material/Add'
 import './Activities.css';
+import axios from 'axios'
+import { useSelector } from 'react-redux';
 
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <MaterialLink color="inherit" href="https://material-ui.com/">
-        Your Website
-      </MaterialLink>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+
 
 const styles = (theme) => ({
     root: {
@@ -119,7 +114,7 @@ function CustomizedDialog({buttonName}) {
             </Typography>
           </DialogContent>
           <DialogActions>
-            <AlertDialog buttonName = "apply" />
+          <AlertDialog buttonName = "Apply" description = {`Are you sure you want to apply for this project/activity? As soon as you press "agree", your details will be sent to the project coordinator.`} question = "Apply for this Project?"/>
           </DialogActions>
         </Dialog>
       </div>
@@ -127,45 +122,7 @@ function CustomizedDialog({buttonName}) {
   }
 
 //FUNCTION FOR APPLY DIALOG
-function AlertDialog({ buttonName }) {
-    const [open, setOpen] = React.useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-    return (
-        <div>
-          <Button variant="contained" color="secondary" onClick={handleClickOpen}>
-                <strong>{buttonName}</strong>
-          </Button>
-          <Dialog
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-          >
-            <DialogTitle id="alert-dialog-title">{"Apply for this Project?"}</DialogTitle>
-            <DialogContent>
-              <DialogContentText id="alert-dialog-description">
-                Are you sure you want to apply for this project/activity? As soon as you press "agree", your details will be sent to the project coordinator.
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleClose} color="secondary" autoFocus>
-                <strong>disagree</strong>
-              </Button>
-              <Button onClick={handleClose} color="primary" variant = "contained" style = {{ backgroundColor: "darkgreen"}} >
-                <strong>Agree</strong>
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </div>
-      );
-}
 const useStyles = makeStyles((theme) => ({
 heroContent: {
     backgroundColor: theme.palette.background.paper,
@@ -288,10 +245,108 @@ const rows = [
     
 ]
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+// const cards = [
+//   {
+//     "title": "Implement Smart Attendance System using Facial Recognition",
+//     "description": "Construct both hardware and software for implementing smart attendance system using facial recognition in every class.",
+//     "prerequisites": "Any branch 3rd year (+) students",
+//     "duration": "3 months",
+//     "stipend": ""
+//   },
+//   {
+//     "title": "Implement College Crypto Currency",
+//     "description": "Create a crypto currency for the college. This currency will be used for all the transactions occuring within the college.",
+//     "prerequisites": "CSE students",
+//     "duration": "3 months",
+//     "stipend": "amazon voucher worth Rs.50,000"
+//   },
+//   {
+//     "title": "Implement Smart Pass System at the gate.",
+//     "description":"Create a smart pass system where the gates can be automatically opened at the arrival of authorized vehicles.",
+//     "prerequisites": "All branch students",
+//     "duration": "4 months",
+//     "stipend": "Rs.1,00,000"
+//   },
+ 
+// ];
 
 export default function Activities() {
+
+    const { id } = useSelector(state=>state.user)
     const classes = useStyles();
+    let [open, setOpen] = useState(false);
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [duration, setDuration] = useState("");
+    const [prerequisites, setPrerequisites] = useState("");
+    const [stipend, setStipend] = useState("")
+    let [imgUrl, setImgUrl] = useState("")
+    const [cards, setCards] = useState([])
+
+    const handleOpenModal = () => {   
+      
+      setTitle("")
+      setDuration("")
+      setPrerequisites("")
+      setStipend("")
+      setDescription("")
+      setImgUrl("")
+      setOpen(true) 
+    }
+
+    const handleClose = () => setOpen(false);
+    const modalStyle = {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: '50%',
+      bgcolor: 'background.paper',
+      borderRadius: "10px",
+      boxShadow: 24,
+      m: 0,
+      p: 4,
+      display: "flex",
+      flexDirection: "row"
+  }
+
+  useEffect(async () => {
+    const response = axios.post("/.netlify/functions/getActivities/getActivities", {
+      
+      
+        id:id
+      
+    })
+    const data = await response
+     
+    
+    
+   console.log(data)
+   setCards(data.data.Activities)
+    console.log(cards)
+  
+    
+  }, [])
+
+    const handleActivitySubmit = async (e) => {
+      e.preventDefault()
+      const new_response = axios.post("/.netlify/functions/insertActivity/insertActivity", { 
+        added_by: id,
+        title: title,
+        description: description,
+        img_url: imgUrl,
+        duration: duration,
+        prerequisites: prerequisites,
+        stipend: stipend
+      })
+      const new_data = await new_response
+      const new_card = new_data.data.insert_Activities_one
+      
+      console.log(new_data)
+      setCards([...cards, new_card])
+      
+      handleClose()
+    }
 
     return (
     <>  
@@ -300,7 +355,14 @@ export default function Activities() {
               <CssBaseline />
               <main>
                   {/* Hero unit */}
-                  <div className={classes.heroContent}>
+                  <Box sx={{
+                        bgcolor: 'background.paper',
+                        pt: 8,
+                        pb: 6,
+                        boxShadow: 10,
+                        borderRadius: '15px',
+                        position: 'relative'
+                      }}>
                   <Container maxWidth="sm">
                       <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
                       Activities
@@ -309,39 +371,137 @@ export default function Activities() {
                       This section has the projects/activities that the students/teachers need. Details regarding the projects like any stipend, pre-requisites, duration etc are provided. Apply for the projects/activities of your choice by filling the form. 
                       If you are selected, you will be notified regarding the same. 
                       </Typography>
+                      <IconButton
+                              onClick = {handleOpenModal}
+                              style = {{ position: "absolute", top: "5%", right: "5%"}}
+                              size="large">
+                              <AddIcon style = {{ color: "blue"}}/>
+                          </IconButton>
                   </Container>
-                  </div>
-                  <Container className={classes.cardGrid} maxWidth="md">
+                  </Box>
+                  <Modal
+                          open = {open}
+                          onClose={handleClose}
+
+                          aria-labelledby="modal-modal-title"
+                          aria-describedby="modal-modal-description"
+                          >
+                          <Box sx = {modalStyle} >
+                              <form  style = {{width: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "space-around", margin: "1em", padding: "0"}}>
+                                  <Box sx = {{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    flexDirection: "column",
+                                    width: "100%"
+                                  }}>
+                                    <TextField 
+                                      type = 'text' 
+                                      sx = {{ my: 1}}
+                                      defaultValue = ""
+                                      onChange = {(e)=> setTitle(e.target.value)}
+                                      label = "Title" 
+                              
+                                      
+                                      fullWidth
+                                      style = {{ fontColor: "black"}}
+                                          />
+                                  
+                                  
+                                    <TextField 
+                                      type = 'text' 
+                                      fullWidth
+                                      defaultValue = ""
+                                      onChange = {(e)=> setDuration(e.target.value)}
+                                      label = "Duration" 
+                                      sx = {{ my: 1}}
+                                          />
+                                  
+                                  
+                                    <TextField 
+                                      type = 'text' 
+                                      fullWidth
+                                      defaultValue = ""
+                                      onChange = {(e)=> setPrerequisites(e.target.value)}
+                                      label = "Prerequisites" 
+                                      sx = {{ my: 1}}
+                                          />
+                                 
+                                    <TextField 
+                                      type = 'text' 
+                                      fullWidth
+                                      defaultValue = ""
+                                      onChange = {(e)=> setStipend(e.target.value)}
+                                      label = "Stipend" 
+                                      sx = {{ my: 1}}
+                                          />
+
+                                    <TextField 
+                                      type = 'text' 
+                                      fullWidth
+                                      defaultValue = ""
+                                      onChange = {(e)=> setImgUrl(e.target.value)}
+                                      label = "ImageUrl (optional)" 
+                                      
+                                          />
+
+                                    <TextField 
+                                      fullWidth
+                                      name = "description"
+                                      onChange = {(e)=> setDescription(e.target.value)} 
+                                      label = "Description" 
+                                      multiline
+                                      minRows = {4}
+                                      maxRows = {8}
+                                      columns = "100"
+                                      sx = {{ my: 1}}
+                                      />
+                                    
+                                  </Box>
+                                    
+                                  
+                                  
+                                  <Button variant = "contained" type = "submit"  onClick = {handleActivitySubmit} color = "primary" >Submit</Button>
+                              </form>
+                              
+                          </Box>
+                          
+                    </Modal>
+
+                  <Container sx={{ py: 8 }} maxWidth="md">
                   {/* End hero unit */}
                   <Grid container spacing={4}>
                       {cards.map((card,i) => (
-                      <Grid item key={card} xs={12} sm={6} md={4}>
+                      <Grid item key={i} xs={12} sm={6} md={4}>
                           
-                              <Card className={classes.card}>
+                              <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', boxShadow: 5 }}>
                               <CardMedia
-                                  className={classes.cardMedia}
-                                  image={`https://source.unsplash.com/random/?schoolactivities/${i}`}
+                                  sx={{
+                                    // 16:9
+                                    pt: '56.25%',
+                                  }}
+                                  image={card.img_url || `https://source.unsplash.com/random/?${card.title}`}
                                   title="Image title"
                               />
-                              <CardContent className={classes.cardContent}>
+                              <CardContent sx={{ flexGrow: 1 }}>
                                   <Typography gutterBottom variant="h5" component="h2">
-                                  <strong>Some Activity</strong> 
+                                    <strong>{card.title}</strong> 
+                                    </Typography>
+                                    <Typography>
+                                    {card.description}
+                                    </Typography>
+                                  <Typography>
+                                      <strong>Prerequisites:</strong> {card.prerequisites}
                                   </Typography>
                                   <Typography>
-                                      Ullamco veniam officia deserunt Lorem fugiat fugiat sit qui dolor qui.
+                                      <strong>Duration:</strong> {card.duration}
                                   </Typography>
                                   <Typography>
-                                      <strong>Prerequisites:</strong> Quis, incididunt non, exercitation quis, nisi.
-                                  </Typography>
-                                  <Typography>
-                                      <strong>Duration:</strong> 1 month
-                                  </Typography>
-                                  <Typography>
-                                      <strong>Stipend:</strong> nill
+                                      <strong>Stipend:</strong> { card.stipend.length == 0 ? "nill" : card.stipend}
                                   </Typography>
                               </CardContent>
                               <CardActions>
-                                  <AlertDialog buttonName = "Apply" />
+                                  <AlertDialog buttonName = "Apply" description = {`Are you sure you want to apply for this project/activity? As soon as you press "agree", your details will be sent to the project coordinator.`} question = "Apply for this Project?"/>
                                   <CustomizedDialog buttonName = "learn more"/>
                               </CardActions>
                               </Card>   
@@ -355,7 +515,7 @@ export default function Activities() {
 
 
         
-          <Container id = "activities-accomplishments" className = "activities__accomplishments" maxWidth = "md">
+          {/* <Container id = "activities-accomplishments" className = "activities__accomplishments" maxWidth = "md">
               <div className = "activities__accomplishments__header">
                   <Typography component="h2" variant="h3" align="center" color="textPrimary" gutterBottom>
                       Accomplishments
@@ -408,7 +568,7 @@ export default function Activities() {
                    
                       
               </div>
-          </Container>
+          </Container> */}
         
     </>
     );

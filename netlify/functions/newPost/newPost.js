@@ -10,24 +10,24 @@ const handler = async (event, context) => {
 
   // send account information along with the POST
   const bodyData = JSON.parse(event.body)
-  const { user_id, body, image, username } = bodyData
+  const { user_id, body, image, username, avatar_url } = bodyData
   let Token = ""
   async function fetchGraphQL(operationsDoc, operationName, variables) {
 
     console.log(bodyData)
-    Token = jwt.sign(
-      {
+    // Token = jwt.sign(
+    //   {
         
-        iat: Math.floor(Date.now() / 1000),
-        exp: Math.floor(Date.now() / 1000 + 7 * 24 * 60 * 60),
-        "https://hasura.io/jwt/claims": {
-          "x-hasura-allowed-roles": ["user", "admin"],
-          "x-hasura-default-role": "user",
-          "x-hasura-user-id": `${user_id}`,
-        },
-      },
-      process.env.JWT_SECRET
-    );
+    //     iat: Math.floor(Date.now() / 1000),
+    //     exp: Math.floor(Date.now() / 1000 + 7 * 24 * 60 * 60),
+    //     "https://hasura.io/jwt/claims": {
+    //       "x-hasura-allowed-roles": ["user", "admin"],
+    //       "x-hasura-default-role": "user",
+    //       "x-hasura-user-id": `${user_id}`,
+    //     },
+    //   },
+    //   process.env.JWT_SECRET
+    // );
 
     const result = await fetch(
       process.env.HASURA_URL,
@@ -49,12 +49,13 @@ const handler = async (event, context) => {
   }
   
   const operationsDoc = `
-  mutation MyMutation($body: String, $image: String, $user_id: uuid, $username: String) {
-    insert_Posts_one(object: {body: $body, image: $image,  user_id: $user_id, username: $username}) {
+  mutation MyMutation($body: String, $image: String, $user_id: uuid, $username: String, $avatar_url: String) {
+    insert_Posts_one(object: {body: $body, image: $image,  user_id: $user_id, username: $username, avatar_url: $avatar_url}) {
       id
       body
       image
       user_id
+      avatar_url
       username
       date_created
       likes
@@ -63,16 +64,16 @@ const handler = async (event, context) => {
   }
 `;
 
-function executeInsertPost(user_id, body, image, username) {
+function executeInsertPost(user_id, body, image, username, avatar_url) {
   return fetchGraphQL(
     operationsDoc,
     "MyMutation",
-    {"user_id": user_id, "body": body, "image": image, "username": username}
+    {"user_id": user_id, "body": body, "image": image, "username": username, "avatar_url": avatar_url}
   );
 }
 
 
-  const { errors, data } = await executeInsertPost(user_id, body, image, username );
+  const { errors, data } = await executeInsertPost(user_id, body, image, username, avatar_url );
 
   if (errors) {
     // handle those errors like a pro
@@ -80,7 +81,7 @@ function executeInsertPost(user_id, body, image, username) {
   }
 
   // do something great with this precious data
-  console.log(data);
+  console.log(data, "84");
 
   
 

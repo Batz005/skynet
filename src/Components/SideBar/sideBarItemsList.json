@@ -5,7 +5,7 @@
     "CLUBS__ACTIVE": ["Clubs"],
     "CLUB__INFO__ACTIVE": ["Introduction", "Achievements", "Hall of Fame", "Gallery","Join"],
     "EVENTS__ACTIVE":  ["Calender", "Events"],
-    "ACTIVITIES__ACTIVE": ["Activities","Accomplishments"],
+    "ACTIVITIES__ACTIVE": ["Activities"],
     "RESOURCES__ACTIVE": ["Resources"],
     "RESOURCE__SECTION__ACTIVE": ["Lectures", "References"], 
     "MYACCOUNT__ACTIVE": ["MyAccount", "Settings"],

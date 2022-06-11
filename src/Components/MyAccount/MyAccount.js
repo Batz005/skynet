@@ -10,13 +10,15 @@ import './MyAccount.css'
 import axios from 'axios';
 import QRCode from "react-qr-code";
 import { addProfilePic } from '../../app/user'
+import {CloudinaryImage} from '@cloudinary/url-gen'
 
 
 
 function MyAccount() {
-
-    const { section, branch, semester,roll_num, first_name, last_name, father_name, mobile, date_of_birth, mentor_name, mentor_email, user_id } = useSelector((state)=>state.user);
+    
+    const { section, branch, semester,roll_num, first_name, last_name, father_name, mobile, date_of_birth, mentor_name, mentor_email, id, avatar_url } = useSelector((state)=>state.user);
     const { email } = useSelector((state)=>state.user);
+    const [profilePic, setProfilePic] = useState(avatar_url ? avatar_url : "https://res.cloudinary.com/cbit-skynet/image/upload/c_thumb,g_face,h_200,w_200/v1654366521/photo-1628155930542-3c7a64e2c833_p3hpkm.jpg")
     const dispatch = useDispatch();
     let [isInputDisabled,setIsInputDisabled] = useState(true);
    
@@ -26,31 +28,64 @@ function MyAccount() {
         setIsEditEnabled(!isEditEnabled);
         setIsInputDisabled(!isInputDisabled);
     }
-    const [open, setOpen] = useState(false);
-    const [files, setFiles] = useState([]);
     
-    const handleClose = () => {
-      setOpen(false);
-    };
+  
+   
 
-    const handleSave=(files)=> {
-        //Saving files to state for further use and closing Modal.
-        setFiles(files);
-        setOpen(false);
-        console.log(files[0],"files")
+    function showUploadWidget() { 
+        window.cloudinary.openUploadWidget({ 
+            cloudName: "cbit-skynet", 
+            uploadPreset: "cbitskynet", 
+            sources: [
+                "local", 
+                "url", 
+                "camera", 
+                "facebook", 
+                "unsplash", 
+                "google_drive", 
+                "image_search", 
+                "dropbox", 
+                "instagram", 
+                "shutterstock"], 
+            googleApiKey: "AIzaSyCJ47LgwNQNrUlfWZKmJChvlpn1OKi-f-U", 
+            showAdvancedOptions: true, 
+            cropping: true, 
+            multiple: false, 
+            defaultSource: "local", 
+            styles: { 
+                palette: { 
+                    window: "#10173a", 
+                    sourceBg: "#20304b", 
+                    windowBorder: "#7171D0", 
+                    tabIcon: "#79F7FF", 
+                    inactiveTabIcon: "#8E9FBF", 
+                    menuIcons: "#CCE8FF", 
+                    link: "#72F1FF", 
+                    action: "#5333FF", 
+                    inProgress: "#00ffcc", 
+                    complete: "#33ff00", 
+                    error: "#cc3333", 
+                    textDark: "#000000", 
+                    textLight: "#ffffff" }, 
+                    fonts: { 
+                        default: null, "'IBM Plex Sans', sans-serif": { url: "https://fonts.googleapis.com/css?family=IBM+Plex+Sans", active: true } } 
+            } }, 
+            (err, result) => {  if (!err && result && result.event === "success") {
 
-        axios.put('/api/addProfilePic', { pic: files[0], user_id: user_id})
-        .then(response=>{
-            console.log(response.data[0])
-            dispatch(addProfilePic(response.data[0]));
-        })
-        
-    }
+                dispatch(addProfilePic(result.info.url));
+                setProfilePic(result.info.url)
+                
+                axios.post('/.netlify/functions/updateAvatar/updateAvatar', {
+                    id: id,
+                    avatar_url: result.info.url
+                })
+                console.log("Done! Here is the image info: ", result.info);
+              } }); 
+        }
+    
+    console.log(avatar_url)
+    const roman = ['', 'I', 'II',"III", "IV", "V", "VI", "VII", "VIII"]
 
-    const handlePicEditClicked = (e)=>{
-        setOpen(true);
-    }
-    const picLink = "https://source.unsplash.com/random/?face"
     return (
         <Container maxWidth = "md" id = "myaccount-myaccount">
             <div className = "myaccount__idsection" >
@@ -58,19 +93,17 @@ function MyAccount() {
                     <Grid item key = "1" md = {6} sm = {6} xs = {12} style = {{ display: "flex", justifyContent: "center"}}>
                     <div className = "myaccount__idsection__details">
                         <div style = {{ position: "relative"}}>
-                            <img src = {picLink} alt = "profile pic" style = {{boxShadow: "0px 3px 7px -2px rgba(255,0,0,0.75)"}} width = "150px" height = "150px"/>
-                            <Fab style = {{position: "absolute", bottom: "1px", right: "2px", size: "10px"}} color = "secondary"  onClick = {handlePicEditClicked}>
+
+                            <img 
+                                src = {profilePic } 
+                                alt = "profile pic" 
+                                style = {{boxShadow: "2", borderRadius: 15}} 
+                                width = "150px" 
+                                height = "150px"/>
+                            <Fab style = {{position: "absolute", bottom: "1px", right: "2px", size: "10px"}} color = "secondary"  size = "small" onClick = {showUploadWidget}>
                                 <EditIcon />     
                             </Fab>
-                            {/* <DropzoneDialog
-                                open={open}
-                                onSave={handleSave}
-                                acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
-                                showPreviews={true}
-                                maxFileSize={5000000}
-                                filesLimit = {1}
-                                onClose={handleClose}
-                            /> */}
+                            
                         </div>
                         <div>
                             <Typography component="h1" variant="h3" align = "center"  className = "myaccount__imagesection__text" gutterBottom>
@@ -79,7 +112,7 @@ function MyAccount() {
                             <Typography variant="h5" color="textSecondary" align = "center" paragraph>
                             {/* <strong>{`Father's Name: ${father_name}`}</strong> */}
                             <strong>{`${roll_num}`}</strong><br/>
-                            <strong>{`${semester} SEM, ${branch}${section}`}</strong>
+                            <strong>{`${roman[semester]} SEM, ${branch}${section}`}</strong>
 
                             </Typography>
                         </div>

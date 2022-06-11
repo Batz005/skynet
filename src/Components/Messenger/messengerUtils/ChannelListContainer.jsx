@@ -41,7 +41,7 @@ const ChannelListContent = ({ isCreating, setIsCreating, setCreateType, setIsEdi
         cookies.remove('userId');
         cookies.remove('username');
         cookies.remove('fullName');
-        // cookies.remove('avatarURL');
+        cookies.remove('avatar_url');
         // cookies.remove('hashedPassword');
         // cookies.remove('phoneNumber');
 

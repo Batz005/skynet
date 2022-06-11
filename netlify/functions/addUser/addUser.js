@@ -10,10 +10,10 @@ const api_secret = process.env.STREAM_API_SECRET;
 const app_id = process.env.STREAM_APP_ID;
 
 const handler = async (event, context) => {
-// const signup = async (req, res) => {
+
     try {
         const bodyData= JSON.parse(event.body);
-        const { fullName, username,  phoneNumber, id } = bodyData;
+        const { fullName, username,  phoneNumber, id, avatar_url } = bodyData;
 
         const userId = id;
 
@@ -24,13 +24,14 @@ const handler = async (event, context) => {
             id: userId, 
             role: 'admin',
             fullName: fullName,
-            phoneNumber: phoneNumber
+            phoneNumber: phoneNumber,
+            avatar_url: avatar_url
          });
          console.log(updateResponse)
         const token = serverClient.createUserToken(userId);
         return {
             statusCode: 200,
-            body: JSON.stringify({ token, fullName, username, userId, phoneNumber }),
+            body: JSON.stringify({ token, fullName, username, userId, phoneNumber, avatar_url }),
           }
         // res.status(200).json({ token, fullName, username, userId, hashedPassword, phoneNumber });
     } catch (error) {
@@ -43,32 +44,7 @@ const handler = async (event, context) => {
     }
 };
 
-// const login = async (req, res) => {
-//     try {
-//         const { username, password } = req.body;
-        
-//         const serverClient = connect(api_key, api_secret, app_id);
-//         const client = StreamChat.getInstance(api_key, api_secret);
 
-//         const { users } = await client.queryUsers({ name: username });
-
-//         if(!users.length) return res.status(400).json({ message: 'User not found' });
-
-//         const success = await bcrypt.compare(password, users[0].hashedPassword);
-
-//         const token = serverClient.createUserToken(users[0].id);
-
-//         if(success) {
-//             res.status(200).json({ token, fullName: users[0].fullName, username, userId: users[0].id});
-//         } else {
-//             res.status(500).json({ message: 'Incorrect password' });
-//         }
-//     } catch (error) {ads
-//         console.log(error);
-
-//         res.status(500).json({ message: error });
-//     }
-// };
 
 module.exports = { handler }
 // module.exports = { signup, login }

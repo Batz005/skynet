@@ -11,6 +11,7 @@ import Cookies from 'universal-cookie';
 
 
 import MuiAlert from '@mui/material/Alert';
+import { useSelector } from 'react-redux';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -31,7 +32,7 @@ const SignUp = () => {
     const [role, setRole] = React.useState('');
     const [ user_metadata, setUserMetaData] = useState({})
 
-
+    const { id } = useSelector(state => state.user)
     const [open, setOpen] = React.useState(false);
 
     const handleClick = () => {
@@ -104,7 +105,7 @@ const SignUp = () => {
                         created_at: data.created_at,
                         updated_at: data.updated_at,
                         id: data.id,
-
+                        avatar_url: "https://res.cloudinary.com/cbit-skynet/image/upload/c_thumb,g_face,h_200,w_200/v1654366521/photo-1628155930542-3c7a64e2c833_p3hpkm.jpg", 
                         role: role,
                         email: email
                         
@@ -116,7 +117,7 @@ const SignUp = () => {
                         const fullName = data.user_metadata.first_name + " " + data.user_metadata.last_name
                 
                         const { data: { token, userId } } = await axios.post(`${URL}/addUser/addUser`, {
-                            username: data.user_metadata.first_name, fullName: fullName, phoneNumber:data.user_metadata.mobile, id: data.id,
+                            username: data.user_metadata.first_name, fullName: fullName, phoneNumber:data.user_metadata.mobile, id: data.id, avatar_url: "https://res.cloudinary.com/cbit-skynet/image/upload/c_thumb,g_face,h_200,w_200/v1654366521/photo-1628155930542-3c7a64e2c833_p3hpkm.jpg",
                         });
                         
 
@@ -182,7 +183,9 @@ const SignUp = () => {
         //     console.log(err);
         // })
     }
-
+    // axios.post(`/.netlify/functions/addUser/addUser`, {
+    //     username: "Sreekar", fullName: "Sreekar Reddy Karnati", phoneNumber: 9348484844, id: id, avatar_url: "https://res.cloudinary.com/cbit-skynet/image/upload/c_thumb,g_face,h_200,w_200/v1654366521/photo-1628155930542-3c7a64e2c833_p3hpkm.jpg",
+    // });
   return (
     <>
     <form className = "signup__form">

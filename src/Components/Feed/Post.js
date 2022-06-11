@@ -14,13 +14,20 @@ import { useSelector } from 'react-redux';
 function Post({ postDetails, stats }) {
     console.log(postDetails, stats)
     const date = new Date(postDetails.date_created)
-    const [upvotes, setUpVotes] = useState(postDetails.likes)
-    const [isLiked, setIsLiked] = useState(postDetails.is_liked)
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];  
+    const likes = postDetails.likes
+    const dislikes = postDetails.dislikes
+    const [upvotes, setUpVotes] = useState(likes)
+    const [isLiked, setIsLiked] = useState(stats.length !== 0 ? stats[0].is_liked: false)
     const { id } = useSelector((state)=>state.user)
-    const [isDisLiked, setIsDisLiked] = useState(postDetails.is_disliked)
+    const [isDisLiked, setIsDisLiked] = useState(stats.length !== 0 ? stats[0].is_disliked: false)
     console.log(isDisLiked)
-    const [downvotes, setDownVotes] = useState(postDetails.dislikes)
-    const formatted_date = date.getDate()+ "-" + date.getMonth() + "-" + date.getFullYear() + " " + date.getHours() + ":" +  date.getMinutes() + ":" + date.getSeconds()
+    const [downvotes, setDownVotes] = useState(dislikes)
+    const formatted_date = date.getDate()+ " " + monthNames[date.getMonth()] + "," + date.getFullYear() + " " + date.getHours() + ":" +  date.getMinutes() + ":" + date.getSeconds()
+    console.log(upvotes, downvotes, postDetails.likes, postDetails.dislikes, isLiked, isDisLiked)
+    
     
     const handleUpVote = () =>{
         if(isDisLiked)
@@ -28,14 +35,15 @@ function Post({ postDetails, stats }) {
         axios.post('/.netlify/functions/upvote/upvote',{
             id: postDetails.id,
             user_id: id,
-            post_id:postDetails.post_id,
+            post_id:postDetails.id,
             likes: postDetails.likes,
 
             dislikes:postDetails.dislikes
         }).then(response=>{
             console.log(response)
             if(response.data){
-                setUpVotes(response.data.likes)
+                postDetails.likes = response.data.likes
+                // stats[0].is_liked = response.data.is_liked
                 setIsLiked(response.data.is_liked)
                 console.log(isLiked)
             }
@@ -52,13 +60,15 @@ function Post({ postDetails, stats }) {
         axios.post('/.netlify/functions/downvote/downvote',{
             id: postDetails.id,
             user_id: id,
-            post_id:postDetails.post_id,
+            post_id:postDetails.id,
             likes: postDetails.likes,
 
             dislikes:postDetails.dislikes
         }).then(response=>{
+            console.log(response)
             if(response.data)
-                setDownVotes(response.data.dislikes)
+                postDetails.dislikes = response.data.dislikes
+                // stats[0].is_disliked = response.data.is_disliked
                 setIsDisLiked(response.data.is_disliked)
                 console.log(isDisLiked)
         }
@@ -75,8 +85,8 @@ function Post({ postDetails, stats }) {
             boxShadow: 4
         }}>
             <div className = "post__top">
-                <Avatar className = "post__avatar">
-                {postDetails.profile_pic ? <img src = "postDetails.profile_pic"/> : postDetails.username[0]} 
+                <Avatar className = "post__avatar" alt = {postDetails.username} src = {postDetails.avatar_url}>
+                
                 </Avatar>
                 <div className = "post__topInfo">
                     <h3>{postDetails.username}</h3>
@@ -88,17 +98,17 @@ function Post({ postDetails, stats }) {
             </div>
 
             <div className = "post__image">
-                <img src = {'https://source.unsplash.com/random/?scenary'} alt = "" />
+                {postDetails.image && <img src = {postDetails.image} alt = "" />}
             </div>
 
             <div className = "post__options">
                 <Button className = "post__option" onClick={handleUpVote} >
                     
-                    <strong style={{color: isLiked? "green": "blue"}}>{upvotes}</strong>
+                    <strong style={{color: isLiked? "green": "blue"}}>{postDetails.likes}</strong>
                     <KeyboardArrowUpIcon fontSize = "large" style = {{color: isLiked? "green": "blue"}}/>
                 </Button>
                 <Button className = "post__option" onClick = {handleDownVote} >
-                    <strong style={{color: isDisLiked? "red": "blue"}}>{downvotes}</strong>
+                    <strong style={{color: isDisLiked? "red": "blue"}}>{postDetails.dislikes}</strong>
                     <KeyboardArrowDownIcon fontSize = "large" style={{color: isDisLiked? "red": "blue"}}/>
                 </Button>
                 <Button className = "post__option">

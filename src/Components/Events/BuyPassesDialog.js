@@ -79,7 +79,7 @@ function BuyPassesDialog({ button_name = "buy passes", pricing_description = "Th
       {/* End hero unit */}
       <Container maxWidth="md" component="main">
         <Grid container spacing={2} alignItems="flex-end">
-          {passes_tiers.map((tier) => (
+          {passes_tiers.length !== 0 && passes_tiers.map((tier) => (
             // Enterprise card is full width at sm breakpoint
             <Grid
               item

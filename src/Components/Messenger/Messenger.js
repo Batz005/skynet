@@ -10,7 +10,7 @@ import './Messenger.css';
 import { useSelector } from 'react-redux';
 const cookies = new Cookies();
 
-const apiKey ='gf9sh7cj96nk';
+const apiKey ='hwf8sa46kzvs';
 const authToken = cookies.get("token");
 
 const client = StreamChat.getInstance(apiKey);
@@ -31,6 +31,8 @@ const Messenger = () => {
             image: cookies.get('avatarURL'),
             hashedPassword: cookies.get('hashedPassword'),
             phoneNumber: cookies.get('phoneNumber'),
+            avatar_url: cookies.get('avatar_url'),
+            
         }, client.devToken(id))
     
    

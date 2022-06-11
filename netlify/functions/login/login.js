@@ -53,6 +53,7 @@ const handler = async (event) => {
           email
           role
           roll_num
+          avatar_url
         }
       }
     `;
@@ -85,7 +86,8 @@ const handler = async (event) => {
       statusCode: 200,
       body: JSON.stringify({
         role: data.Users_by_pk.role,
-        token: Token
+        token: Token,
+        avatar_url: data.Users_by_pk.avatar_url
       })
       // // more keys you can return:
       // headers: { "headerName": "headerValue", ... },

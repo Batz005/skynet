@@ -55,7 +55,7 @@ const handler = async (event, context) => {
       id
       post_id
       is_disliked
-      is_disliked
+      is_liked
       user_id
     }
 
@@ -89,7 +89,7 @@ mutation MyMutation($id: uuid!, $is_disliked: Boolean, $dislikes: Int, $post_id:
       id
       post_id
       is_disliked
-      is_disliked
+      is_liked
     }
     update_Posts_by_pk(pk_columns: {id: $post_id},  _set: {dislikes: $dislikes}) {
         dislikes

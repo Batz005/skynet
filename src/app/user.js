@@ -15,8 +15,8 @@ const initialState = {
     mobile: '',
     mentor_name: '',
     mentor_email: '',
-    roll_num: 0
-    // profile_pic: '',
+    roll_num: 0,
+    profile_pic: ''
     // friends: '',
     // groups_joined: '',
     // clubs_joined: [],

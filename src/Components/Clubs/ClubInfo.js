@@ -153,11 +153,11 @@ const mainFeaturedPost = {
 const latestEvents = [
   {
     id: "1",
-    title: 'latest Event 1',
+    title: 'Conducted Conference',
     date: 'Nov 12',
     description:
       'Exercitation reprehenderit Lorem do nisi.',
-    image: 'https://source.unsplash.com/random/?school',
+    image: 'https://source.unsplash.com/random/?conference',
     imageText: 'Image Text',
   },
   {
@@ -174,8 +174,8 @@ const latestEvents = [
 const achievements = [
   {
     id: "1",
-    title: 'Achievement 1',
-    date: 'Nov 12',
+    title: 'Won State level Competition',
+    date: 'Nov 12, 2019',
     type: "Achievement",
     description:
       'Aliqua culpa eu in Lorem sint labore sunt nulla ut irure anim consequat. Nostrud consequat et amet amet id proident. Nisi magna Lorem labore labore dolore.',
@@ -184,7 +184,7 @@ const achievements = [
   },
   {
     id: "2",
-    title: 'Event 1',
+    title: 'Club meeting',
     date: 'Nov 11',
     type: "Event",
     description:
@@ -194,7 +194,7 @@ const achievements = [
   },
   {
     id: "3",
-    title: 'Achievement 2',
+    title: 'Finalist in National Level Competition',
     date: 'Nov 11',
     type: 'Achievement',
     description:
@@ -207,7 +207,7 @@ const achievements = [
 const hallOfFame = [
   {
     id: "1",
-    title: 'Name of the Member',
+    title: 'Karthikeya',
     description:
       'Aliqua culpa eu in Lorem sint labore sunt nulla ut irure anim consequat. Nostrud consequat et amet amet id proident. Nisi magna Lorem labore labore dolore.magna Lorem labore labore dolore.',
     image: 'https://source.unsplash.com/random/?schoolkids',
@@ -215,7 +215,7 @@ const hallOfFame = [
   },
   {
     id: "2",
-    title: 'Name of the Member',
+    title: 'Sreekar',
     description:
       'Non veniam ut enim sint sit amet ipsum do id ullamco id laborum et pariatur. Mollit irure ex consequat culpa velit quis sit veniam. Fugiat consectetur reprehenderit ad ex qui consequat.',
     image: 'https://source.unsplash.com/random/?schoolkids',
@@ -224,7 +224,7 @@ const hallOfFame = [
   
   {
     id: "3",
-    title: 'Name of the Member',
+    title: 'Arjun',
     description:
       'commodo consequat sunt id sint. Reprehenderit labore culpa dolore non dolor deserunt consectetur mollit nulla occaecat do dolore. Commodo labore elit do laboris laboris nisi voluptate. Incididunt minim minim ad aute. Incididunt velit Lorem enim aute veniam.',
     image: 'https://source.unsplash.com/random/?schoolkids',
@@ -232,7 +232,7 @@ const hallOfFame = [
   },
   {
     id: "4",
-    title: 'Name of the Member',
+    title: 'Komaram Bheem',
     description:
       'commodo consequat sunt id sint. Reprehenderit labore culpa dolore non dolor deserunt consectetur mollit nulla occaecat do dolore. Commodo labore elit do laboris laboris nisi voluptate. Incididunt minim minim ad aute. Incididunt velit Lorem enim aute veniam.',
     image: 'https://source.unsplash.com/random/?schoolkids',

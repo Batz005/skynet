@@ -91,17 +91,18 @@ function SignInForm() {
                         const fullName = data.user_metadata.first_name + " " + data.user_metadata.last_name
                 
                         const userData = await axios.post(`${URL}/loginUser/loginUser`, {
-                            username: data.user_metadata.first_name, fullName: fullName, phoneNumber:data.user_metadata.mobile, id: data.id
+                            username: data.user_metadata.first_name, fullName: fullName, phoneNumber:data.user_metadata.mobile, id: data.id, avatar_url: loginData.data.avatar_url
                         });
                         console.log(userData)
-                        const { token, userId} = userData.data
+                        const { token, userId, avatar_url} = userData.data
                         cookies.set('token', token);
                         cookies.set('username', data.user_metadata.first_name);
                         cookies.set('fullName', fullName);
                         cookies.set('user_id', userId);
+                        cookies.set('avatar_url', avatar_url);
 
                         
-            dispatch(addUserData({...data.user_metadata, id: data.id, email: data.email, role: loginData.data.role, token: loginData.data.token}))
+            dispatch(addUserData({...data.user_metadata, id: data.id, email: data.email, role: loginData.data.role, token: loginData.data.token, avatar_url: loginData.data.avatar_url}))
             
                 dispatch(pageSelected({active__page: 'HOME__ACTIVE'}));
                 dispatch(subPageSelected({active__subPage: 'FEED__SUBPAGE__ACTIVE'}));

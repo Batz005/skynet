@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import StarBorderRoundedIcon from '@mui/icons-material/StarBorderRounded';
 import StarRateRoundedIcon from '@mui/icons-material/StarRateRounded';
-
+import AddIcon from '@mui/icons-material/Add'
 import { useDispatch } from 'react-redux';
 import {
   Link as MaterialLink,
@@ -16,6 +16,9 @@ import {
   Grid,
   Typography,
   Container,
+  Box,
+  Modal,
+  Button
 } from '@mui/material';
 import { Link }from 'react-router-dom';
 
@@ -121,7 +124,27 @@ const clubsList = [
 ]
 
 export default function Clubs() {
+  let [open, setOpen] = useState(false);
 
+  const handleOpenModal = () => {   
+    setOpen(true) 
+  }
+
+  const handleClose = () => setOpen(false);
+  const modalStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '50%',
+    bgcolor: 'background.paper',
+    borderRadius: "10px",
+    boxShadow: 24,
+    m: 0,
+    p: 4,
+    display: "flex",
+    flexDirection: "row"
+}
   const dispatch = useDispatch();
 
   return (
@@ -130,7 +153,14 @@ export default function Clubs() {
       <main>
       <div id = "clubs-clubs">
          {/* Hero unit */}
-         <div className={classes.heroContent}>
+         <Box sx={{
+                        bgcolor: 'background.paper',
+                        pt: 8,
+                        pb: 6,
+                        boxShadow: 10,
+                        borderRadius: '15px',
+                        position: 'relative'
+                      }}>
           <Container maxWidth="sm">
             <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
               Clubs
@@ -138,9 +168,60 @@ export default function Clubs() {
             <Typography variant="h5" align="center" color="textSecondary" paragraph>
               This section has all the clubs available in the college. You can select a club and see all the details regarding the club. Clubs that a student has already joined will be shown to the right.
             </Typography>
+            <IconButton
+                              onClick = {handleOpenModal}
+                              style = {{ position: "absolute", top: "5%", right: "5%"}}
+                              size="large">
+                              <AddIcon style = {{ color: "blue"}}/>
+            </IconButton>
           </Container>
-        </div>
-        <Container className={classes.cardGrid} maxWidth="md" style = {{ width: "100%"}}>
+        </Box>
+        <Modal
+                          open = {open}
+                          onClose={handleClose}
+
+                          aria-labelledby="modal-modal-title"
+                          aria-describedby="modal-modal-description"
+                          >
+                          <Box sx = {modalStyle} >
+                              <form  style = {{width: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "space-around", margin: "1em", padding: "0"}}>
+                                  <div className = "resource__add__items">
+                                    <input 
+                                    type = 'text' 
+                                    className='resource__title'
+                                    defaultValue = ""
+                                    
+                                    placeholder = "Title of the Resource" 
+                                    style = {{ fontColor: "black"}}
+                                        />
+                                  </div>
+                                  <div className = "resource__add__items">
+                                    <input 
+                                      type = 'text' 
+                                      className='resource__imgUrl'
+                                      defaultValue = ""
+                                      
+                                      placeholder = "ImageUrl (optional)" 
+                                          />
+                                  </div>
+                                  <div className='resource__add__items'>
+                                    <textarea 
+                                      className='resource__description' 
+                                      name = "description"
+                                      
+                                      placeholder = "Type your description here!" 
+                                      rows = "10" 
+                                      columns = "100"
+                                      />
+                                  </div>
+                                  
+                                  <Button variant = "contained" type = "submit"  color = "primary" >Submit</Button>
+                              </form>
+                              
+                          </Box>
+                          
+                    </Modal>
+        <Container sx={{ py: 8 }} maxWidth="md" style = {{ width: "100%"}}>
           {/* End hero unit */}
           <Grid container spacing={4} style = {{ width: "100%"}}>
             {clubsList.map((clubsList,i) => (

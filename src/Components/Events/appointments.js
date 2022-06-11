@@ -24,9 +24,9 @@ export default [
       startDate: new Date(2018, 6, 24, 14, 30),
       endDate: new Date(2018, 6, 24, 15, 45),
     }, {
-      title: "Install New Database",
-      startDate: new Date(2018, 6, 25, 9, 45),
-      endDate: new Date(2018, 6, 25, 11, 15),
+      title: "Final Budget Review",
+      startDate: new Date(2022, 5, 2, 9, 45),
+      endDate: new Date(2022, 5, 5, 11, 15),
     }, 
     
 ];

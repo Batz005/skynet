@@ -34,7 +34,8 @@ import { pageSelected,subPageSelected } from '../../app/site';
 
 function Header() {
     
-    const username = useSelector((state)=>state.user.first_name);
+    const {first_name, avatar_url} = useSelector((state)=>state.user);
+    const username = first_name
     console.log(username);
     const active__page = useSelector((state) => state.site.active__page);
     console.log(active__page);
@@ -179,8 +180,8 @@ function Header() {
                     }}
                 >
                     <div className = "header__info">
-                        <Avatar sx={{ bgcolor: deepOrange[500] }}>
-                            {username[0]}
+                        <Avatar sx={{ bgcolor: deepOrange[500] }} alt = {username} src = {avatar_url}>
+                            
                         </Avatar>
                         <h4>{username}</h4>
                     </div>
@@ -190,9 +191,9 @@ function Header() {
                 <div className = "header__buttons">
                     
                     <IconButton size="large">
-                        <Badge badgeContent = {5} color = 'secondary'>
+                        
                             <NotificationsActiveIcon /> 
-                        </Badge>
+                        
                     </IconButton>
                     <IconButton size="large">
                         <InvertColorsOutlinedIcon />

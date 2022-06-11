@@ -17,7 +17,8 @@ import {
   Container,
   Box,
   Button,
-  Modal
+  Modal,
+  TextField
 } from '@mui/material';
 import { Link as LinkRouter }from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add'
@@ -194,31 +195,37 @@ console.log(resourcesList)
                           <Box sx = {modalStyle} >
                               <form  style = {{width: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "space-around", margin: "1em", padding: "0"}}>
                                   <div className = "resource__add__items">
-                                    <input 
+                                    <TextField 
                                     type = 'text' 
-                                    className='resource__title'
+                                    
                                     defaultValue = ""
                                     onChange = {(e)=> setTitle(e.target.value)}
-                                    placeholder = "Title of the Resource" 
+                                    label = "Title of the Resource" 
+                                    
+                                    
+                                    fullWidth
                                     style = {{ fontColor: "black"}}
                                         />
                                   </div>
                                   <div className = "resource__add__items">
-                                    <input 
+                                    <TextField 
                                       type = 'text' 
-                                      className='resource__imgUrl'
+                                      fullWidth
                                       defaultValue = ""
                                       onChange = {(e)=> setImgUrl(e.target.value)}
-                                      placeholder = "ImageUrl (optional)" 
+                                      label = "ImageUrl (optional)" 
+                                      
                                           />
                                   </div>
                                   <div className='resource__add__items'>
-                                    <textarea 
-                                      className='resource__description' 
+                                    <TextField 
+                                      fullWidth
                                       name = "description"
                                       onChange = {(e)=> setDescription(e.target.value)} 
-                                      placeholder = "Type your description here!" 
-                                      rows = "10" 
+                                      label = "Type your description here!" 
+                                      multiline
+                                      minRows = {4}
+                                      maxRows = {8}
                                       columns = "100"
                                       />
                                   </div>

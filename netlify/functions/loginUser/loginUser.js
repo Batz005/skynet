@@ -10,36 +10,10 @@ const api_secret = process.env.STREAM_API_SECRET;
 const app_id = process.env.STREAM_APP_ID;
 
 const handler = async (event, context) => {
-// const signup = async (req, res) => {
-//     try {
-//         const { fullName, username, password, phoneNumber } = JSON.parse(event.body);
 
-//         const userId = crypto.randomBytes(16).toString('hex');
-
-//         const serverClient = connect(api_key, api_secret, app_id);
-
-//         const hashedPassword = await bcrypt.hash(password, 10);
-
-//         const token = serverClient.createUserToken(userId);
-//         return {
-//             statusCode: 200,
-//             body: JSON.stringify({ token, fullName, username, userId, hashedPassword, phoneNumber }),
-//           }
-//         // res.status(200).json({ token, fullName, username, userId, hashedPassword, phoneNumber });
-//     } catch (error) {
-//         console.log(error);
-//         return {
-//             statusCode: 500,
-//             body: JSON.stringify({ message: error }),
-//           }
-//         // res.status(500).json({ message: error });
-//     }
-// };
-
-// const login = async (req, res) => {
     try {
         const bodyData= JSON.parse(event.body);
-        const { username, fullName, phoneNumber, id } = bodyData;
+        const { username, fullName, phoneNumber, id, avatar_url } = bodyData;
         const serverClient = connect(api_key, api_secret, app_id);
         const client = StreamChat.getInstance(api_key, api_secret);
 
@@ -74,9 +48,9 @@ const handler = async (event, context) => {
         
             return {
                 statusCode: 200,
-                body: JSON.stringify({ token, fullName: fullName, username, userId: id}),
+                body: JSON.stringify({ token, fullName: fullName, username, userId: id, avatar_url: avatar_url}),
               }
-            // res.status(200).json({ token, fullName: users[0].fullName, username, userId: users[0].id});
+         
        
     } catch (error) {
         console.log(error);
@@ -84,9 +58,8 @@ const handler = async (event, context) => {
             statusCode: 500,
             body: JSON.stringify({ message: error }),
           }
-        // res.status(500).json({ message: error });
+       
     }
 };
 
 module.exports = { handler }
-// module.exports = { signup, login }

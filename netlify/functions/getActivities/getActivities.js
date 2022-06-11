@@ -1,10 +1,10 @@
 const fetch = require('node-fetch')
-// const jwt = require('jsonwebtoken')
+
 
 
 
 const handler = async (event, context) => {
- 
+  if (event.httpMethod !== 'POST') return { statusCode: 400, body: 'Must POST to this function' }
 
   // send account information along with the POST
   const bodyData = JSON.parse(event.body)
@@ -12,7 +12,7 @@ const handler = async (event, context) => {
   let Token = ""
   async function fetchGraphQL(operationsDoc, operationName, variables) {
 
-    // console.log(bodyData)
+    console.log(bodyData)
     // Token = jwt.sign(
     //   {
        
@@ -48,39 +48,30 @@ const handler = async (event, context) => {
   
 
   const operationsDoc = `
-  query MyQuery($user_id: uuid!) {
-    Posts(order_by: {date_created: desc}) {
+  query MyQuery {
+    Activities {
+      added_by
+      description
+      duration
       id
-      body
-      image
-      user_id
-      username
-      date_created
-      likes
-      avatar_url
-      dislikes
-    }
-
-    Post_Stats(where: {user_id: {_eq: $user_id}}){
-      id
-      post_id
-      is_liked
-      is_disliked
-      user_id
+      img_url
+      prerequisites
+      title
+      stipend
     }
   }
 `;
 
-function fetchMyQuery(id) {
+function fetchMyQuery() {
   return fetchGraphQL(
     operationsDoc,
     "MyQuery",
-    {"user_id":id}
+    {}
   );
 }
 
 
-  const { errors, data } = await fetchMyQuery(id);
+  const { errors, data } = await fetchMyQuery();
 
   if (errors) {
     // handle those errors like a pro

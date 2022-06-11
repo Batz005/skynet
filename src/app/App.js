@@ -117,7 +117,7 @@ const modalStyle = {
   width: '80%',
   height: '80%',
   bgColor: "transparent",
-  borderRadius: "10px",
+  borderRadius: "16px",
   boxShadow: 24,
   p: 4,
   display: "flex",
